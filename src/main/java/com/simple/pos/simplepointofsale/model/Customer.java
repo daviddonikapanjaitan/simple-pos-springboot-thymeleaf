@@ -38,8 +38,6 @@ public class Customer {
     @Column(name = "other_customer_details")
     private String otherCustomerDetails;
 
-    
-
     public Customer(String paymentMethodCode, String customerName, String customerPhone,
             String customerEmail, Date dateBecomeCustomer, String paymentDetails, String otherCustomerDetails) {
         super();

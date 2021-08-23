@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+ 
 @Controller
 public class CustomerController {
 
@@ -83,5 +83,13 @@ public class CustomerController {
         model.addAttribute("customerDto", customerDto);
 
         return "update_customer_data";
+    }
+
+    @GetMapping("/deleteCustomer/{id}")
+    public String deleteCustomer(
+        @PathVariable(value = "id") long id
+    ){
+        this.customerService.deleteCustomerById(id);
+        return "redirect:/";
     }
 }

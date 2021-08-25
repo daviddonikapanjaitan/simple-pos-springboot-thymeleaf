@@ -1,16 +1,16 @@
 package com.simple.pos.simplepointofsale.Dto;
 
-public class PaymentMethod {
+public class PaymentMethodDto {
     
     private Long paymentMethodId;
     private String paymentMethodCode;
     private String paymentMethodDescription;
 
-    public PaymentMethod(){
+    public PaymentMethodDto(){
 
     }
 
-    public PaymentMethod(String paymentMethodCode, String paymentMethodDescription) {
+    public PaymentMethodDto(String paymentMethodCode, String paymentMethodDescription) {
         super();
         this.paymentMethodCode = paymentMethodCode;
         this.paymentMethodDescription = paymentMethodDescription;

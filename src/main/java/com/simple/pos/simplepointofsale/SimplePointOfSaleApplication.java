@@ -9,5 +9,4 @@ public class SimplePointOfSaleApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SimplePointOfSaleApplication.class, args);
 	}
-
 }

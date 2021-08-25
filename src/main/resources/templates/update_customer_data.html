@@ -18,7 +18,7 @@
                 <h1>Update New Customer</h1>
         
                 <div class="container">
-                    <form action="#" th:action="@{/saveCustomer}" th:object="${customerDto}" method="POST">
+                    <form action="#" th:action="@{/updateCustomer/}+ ${customerId}"  th:object="${customerDto}" method="POST">
                         <div class="form-group">
                             <label for="exampleInputPassword1">Payment method code</label>
                             <input type="text" th:field="*{paymentMethodCode}" class="form-control">
@@ -54,12 +54,12 @@
                             <input type="text" th:field="*{otherCustomerDetails}" placeholder="Other Customer Details" class="form-control">
                         </div>
 
-                        <button type="submit" class="btn btn-info"> Save Employee</button>
+                        <button type="submit" class="btn btn-info"> Update Customer</button>
                     </form>
             
                     <hr>
             
-                    <a th:href="@{/}"> Back to Employee List</a>
+                    <a th:href="@{/}"> Back to Customer List</a>
                 </div>
             </div>
         </main>

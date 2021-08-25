@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+ 
 @Controller
 public class CustomerController {
 
@@ -60,6 +60,31 @@ public class CustomerController {
         ));
         return "redirect:/";
     }
+
+    @PostMapping("/updateCustomer/{id}")
+    public String updateCusotmerId(
+        @PathVariable(value = "id") Long id,
+        @ModelAttribute("customer") CustomerDto customerDto
+    ) throws ParseException{
+
+        Date dateBecomeCustomer = new SimpleDateFormat("yyyy-MM-dd").parse(customerDto.getDateBecomeCustomer());
+
+        Customer updateCustomer = new Customer(
+            customerDto.getPaymentMethodCode(),
+            customerDto.getCustomerName(),
+            customerDto.getCustomerPhone(),
+            customerDto.getCustomerEmail(),
+            dateBecomeCustomer,
+            customerDto.getPaymentDetails(),
+            customerDto.getOtherCustomerDetails()
+        );
+
+        updateCustomer.setCustomerId(id);
+
+        customerService.saveCustomer(updateCustomer);
+
+        return "redirect:/";
+    }
     
     @GetMapping("/showFormForUpdate/{id}")
     public String updateCusotmerDate(
@@ -81,6 +106,7 @@ public class CustomerController {
         logger.info("{}", customerDto);
 
         model.addAttribute("customerDto", customerDto);
+        model.addAttribute("customerId", id);
 
         return "update_customer_data";
     }

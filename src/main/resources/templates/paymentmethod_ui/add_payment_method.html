@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <div th:replace="head_fragments/head_customers :: head"></div>
+
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+
+        <main role="main" class="container">
+            <div class="container">
+                <h1>Add New Payment Method</h1>
+        
+                <div class="container">
+
+                    <form action="#" th:action="@{/payment-method/savePaymentMethod}" th:object="${paymentMethod}" method="POST">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Payment method code</label>
+                            <input type="text" th:field="*{paymentMethodCode}" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Payment Method description</label>
+                            <textarea type="text" th:field="*{paymentMethodDescription}" class="form-control" rows="5"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-info"> Save Payment Method</button>
+                        <a th:href="@{/payment-method/list}" type="button" class="btn btn-info"> Back to Payment Method List</a>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

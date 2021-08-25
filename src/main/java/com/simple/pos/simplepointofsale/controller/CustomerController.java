@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
- 
+
 @Controller
 public class CustomerController {
 
@@ -33,14 +33,14 @@ public class CustomerController {
     @GetMapping("/")
     public String viewCustomerPage(Model model){
         model.addAttribute("listCustomers", customerService.getAllCustomers());
-        return "index";
+        return "customers_ui/index";
     }
    
     @GetMapping("/addNewCustomer")
     public String addNewCustomer(Model model){
         Customer customer = new Customer();
         model.addAttribute("customer", customer);
-        return "add_new_customer";
+        return "customers_ui/add_new_customer";
     }
 
     @PostMapping("/saveCustomer")
@@ -109,7 +109,7 @@ public class CustomerController {
         model.addAttribute("customerDto", customerDto);
         model.addAttribute("customerId", id);
 
-        return "update_customer_data";
+        return "customers_ui/update_customer_data";
     }
 
     @GetMapping("/deleteCustomer/{id}")

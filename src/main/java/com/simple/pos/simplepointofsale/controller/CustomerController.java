@@ -47,7 +47,8 @@ public class CustomerController {
     public String createCustomer(
         @ModelAttribute("customer") CustomerDto customerDto
     ) throws ParseException{
-        Date dateBecomeCustomer = new SimpleDateFormat("yyyy-MM-dd").parse(customerDto.getDateBecomeCustomer());  
+        
+        Date dateBecomeCustomer = converterService.stringToDate(customerDto.getDateBecomeCustomer(), "yyyy-MM-dd");
 
         customerService.saveCustomer(new Customer(
             customerDto.getPaymentMethodCode(),

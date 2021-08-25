@@ -29,4 +29,20 @@ public class ConverterImpl implements ConverterService {
             return null;
         }
     }
+
+    @Override
+    public Date stringToDate(String stringInput, String format) {
+        try{
+            logger.info("Date Input[ConverterImpl|dateToString]: {}", stringInput);
+            logger.info("Date format[ConverterImpl|dateToString]: {}", format);
+
+            Date dateOutput = new SimpleDateFormat(format).parse(stringInput);
+
+            logger.info("Date stringOutput[ConverterImpl|dateToString]: {}", dateOutput);
+    
+            return dateOutput;
+        }catch(Exception e){
+            return null;
+        }
+    }
 }

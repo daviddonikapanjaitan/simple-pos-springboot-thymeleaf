@@ -24,8 +24,8 @@
                         <tr th:each="paymentMethod : ${listPaymentMethod}">
                             <td th:text="${paymentMethod.paymentMethodId}"></td>
                             <td th:text="${paymentMethod.paymentMethodCode}"></td>
-                            <td> <a th:href="@{/showFormForUpdate/{id}(id=${paymentMethod.paymentMethodId})}" class="btn btn-primary">Update</a>
-                                <a th:href="@{/deleteCustomer/{id}(id=${paymentMethod.paymentMethodId})}" class="btn btn-danger">Delete</a>
+                            <td> <a th:href="@{/payment-method/update-payment-method-form/{id}(id=${paymentMethod.paymentMethodId})}" class="btn btn-primary">Update</a>
+                                <a th:href="@{/payment-method/deletePaymentMethod/{id}(id=${paymentMethod.paymentMethodId})}" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(listPaymentMethod)}">

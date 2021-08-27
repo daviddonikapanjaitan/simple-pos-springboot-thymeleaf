@@ -12,7 +12,7 @@
         
                 <div class="container">
 
-                    <form action="#" th:action="@{/{postSaveLink}(postSaveLink=${postSaveLink})}" th:object="${addresses}" method="POST">
+                    <form action="#" th:action="@{/{updateFormLink}(updateFormLink=${updateFormLink})}" th:object="${addressesDto}" method="POST">
                         <div class="form-group">
                             <label for="exampleInputPassword1">Line 1</label>
                             <input type="text" th:field="*{line1}" class="form-control">

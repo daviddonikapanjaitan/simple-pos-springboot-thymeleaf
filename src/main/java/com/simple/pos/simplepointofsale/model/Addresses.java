@@ -36,8 +36,8 @@ public class Addresses {
     @Column(name = "state_province_county")
     private String stateProvinceCounty;
 
-    @Column(name = "county")
-    private String county;
+    @Column(name = "country")
+    private String country;
 
     @Column(name = "otherAddressDetails")
     private String otherAddressDetails;
@@ -47,7 +47,7 @@ public class Addresses {
     }
 
     public Addresses(String line1, String line2, String line3, String line4, String city, String zipPostcode,
-            String stateProvinceCounty, String county, String otherAddressDetails) {
+            String stateProvinceCounty, String country, String otherAddressDetails) {
         super();
         this.line1 = line1;
         this.line2 = line2;
@@ -56,13 +56,13 @@ public class Addresses {
         this.city = city;
         this.zipPostcode = zipPostcode;
         this.stateProvinceCounty = stateProvinceCounty;
-        this.county = county;
+        this.country = country;
         this.otherAddressDetails = otherAddressDetails;
     }
 
     @Override
     public String toString() {
-        return "Addresses [addressId=" + addressId + ", city=" + city + ", county=" + county + ", line1=" + line1
+        return "Addresses [addressId=" + addressId + ", city=" + city + ", county=" + country + ", line1=" + line1
                 + ", line2=" + line2 + ", line3=" + line3 + ", line4=" + line4 + ", otherAddressDetails="
                 + otherAddressDetails + ", stateProvinceCounty=" + stateProvinceCounty + ", zipPostcode=" + zipPostcode
                 + "]";
@@ -132,12 +132,12 @@ public class Addresses {
         this.stateProvinceCounty = stateProvinceCounty;
     }
 
-    public String getCounty() {
-        return county;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCounty(String county) {
-        this.county = county;
+    public void setcountry(String country) {
+        this.country = country;
     }
 
     public String getOtherAddressDetails() {

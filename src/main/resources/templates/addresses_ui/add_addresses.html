@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <div th:replace="head_fragments/head_customers :: head"></div>
+
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+
+        <main role="main" class="container">
+            <div class="container">
+                <h1 th:text="'Add New ' +  ${titleCRUD}"></h1>
+        
+                <div class="container">
+
+                    <form action="#" th:action="@{/{postSaveLink}(postSaveLink=${postSaveLink})}" th:object="${addresses}" method="POST">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Customer Id</label>
+                            <input type="text" th:field="*{addressId}" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Basket Datetime</label>
+                            <input type="date" th:field="*{line1}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Total Cost</label>
+                            <input type="text" th:field="*{line2}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Other Basket Details</label>
+                            <textarea type="text" th:field="*{line3}" class="form-control" rows="5"></textarea>
+                        </div>
+
+                        <button th:text="'Save ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>
+                        <a th:href="@{/{link}(link=${listLink})}" th:text="'  Back to ' + ${titleCRUD} + ' List'" type="button" class="btn btn-info"></a>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

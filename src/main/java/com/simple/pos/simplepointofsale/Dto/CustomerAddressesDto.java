@@ -1,36 +1,25 @@
 package com.simple.pos.simplepointofsale.Dto;
 
-import java.util.Date;
-
 public class CustomerAddressesDto {
 
-    private Long customerAddressId;
     private Long customerId;
     private Long addressId;
-    private Long addressTypeCode;
-    private Date dateFrom;
-    private Date dateTo;
+    private String addressTypeCode;
+    private String dateFrom;
+    private String dateTo;
 
     public CustomerAddressesDto(){
 
     }
 
-    public CustomerAddressesDto(Long customerId, Long addressId, Long addressTypeCode,
-            Date dateFrom, Date dateTo) {
+    public CustomerAddressesDto(Long customerId, Long addressId, String addressTypeCode,
+        String dateFrom, String dateTo) {
         super();
         this.customerId = customerId;
         this.addressId = addressId;
         this.addressTypeCode = addressTypeCode;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
-    }
-
-    public Long getCustomerAddressId() {
-        return customerAddressId;
-    }
-
-    public void setCustomerAddressId(Long customerAddressId) {
-        this.customerAddressId = customerAddressId;
     }
 
     public Long getCustomerId() {
@@ -49,34 +38,34 @@ public class CustomerAddressesDto {
         this.addressId = addressId;
     }
 
-    public Long getAddressTypeCode() {
+    public String getAddressTypeCode() {
         return addressTypeCode;
     }
 
-    public void setAddressTypeCode(Long addressTypeCode) {
+
+    public void setAddressTypeCode(String addressTypeCode){
         this.addressTypeCode = addressTypeCode;
     }
 
-    public Date getDateFrom() {
+    public String getDateFrom() {
         return dateFrom;
     }
 
-    public void setDateFrom(Date dateFrom) {
+    public void setDateFrom(String dateFrom) {
         this.dateFrom = dateFrom;
     }
 
-    public Date getDateTo() {
+    public String getDateTo() {
         return dateTo;
     }
 
-    public void setDateTo(Date dateTo) {
+    public void setDateTo(String dateTo) {
         this.dateTo = dateTo;
     }
 
     @Override
     public String toString() {
-        return "CustomerAddressesDto [addressId=" + addressId + ", addressTypeCode=" + addressTypeCode
-                + ", customerAddressId=" + customerAddressId + ", customerId=" + customerId + ", dateFrom=" + dateFrom
-                + ", dateTo=" + dateTo + "]";
+        return "CustomerAddressesDto [addressId=" + addressId + ", addressTypeCode=" + addressTypeCode + ", customerId="
+                + customerId + ", dateFrom=" + dateFrom + ", dateTo=" + dateTo + "]";
     }
 }

@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+ 
 @Entity
 @Table(name = "Customer_Addresses")
 public class CustomerAddresses{
@@ -24,7 +24,7 @@ public class CustomerAddresses{
     private Long addressId;
 
     @Column(name = "address_type_code")
-    private Long addressTypeCode;
+    private String addressTypeCode;
 
     @Column(name = "date_from")
     private Date dateFrom;
@@ -43,7 +43,7 @@ public class CustomerAddresses{
                 + ", dateTo=" + dateTo + "]";
     }
 
-    public CustomerAddresses(Long customerId, Long addressId, Long addressTypeCode, Date dateFrom, Date dateTo) {
+    public CustomerAddresses(Long customerId, Long addressId, String addressTypeCode, Date dateFrom, Date dateTo) {
         super();
         this.customerId = customerId;
         this.addressId = addressId;
@@ -76,11 +76,11 @@ public class CustomerAddresses{
         this.addressId = addressId;
     }
 
-    public Long getAddressTypeCode() {
+    public String getAddressTypeCode() {
         return addressTypeCode;
     }
 
-    public void setAddressTypeCode(Long addressTypeCode) {
+    public void setAddressTypeCode(String addressTypeCode) {
         this.addressTypeCode = addressTypeCode;
     }
 

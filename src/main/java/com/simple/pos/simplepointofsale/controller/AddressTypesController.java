@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
   
 @Controller
@@ -47,5 +48,10 @@ public class AddressTypesController {
         model.addAttribute("postSaveLink", postSaveLink);
 
         return "address_type_ui/add_address_type";
+    }
+
+    @PostMapping("/save")
+    public String save(Model model){
+        return null;
     }
 }

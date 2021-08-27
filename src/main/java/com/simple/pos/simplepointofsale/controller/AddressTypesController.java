@@ -1,7 +1,8 @@
 package com.simple.pos.simplepointofsale.controller;
 
+import com.simple.pos.simplepointofsale.Dto.AddressTypesDto;
 import com.simple.pos.simplepointofsale.model.AddressTypes;
-import com.simple.pos.simplepointofsale.service.AddressesService;
+import com.simple.pos.simplepointofsale.service.AddressTypesService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-  
+   
 @Controller
 @RequestMapping("/address-type")
 public class AddressTypesController {
@@ -26,12 +29,12 @@ public class AddressTypesController {
     private static String postSaveLink = "address-type/save";
 
     @Autowired
-    private AddressesService addressesService;
+    private AddressTypesService addressTypesService;
 
     @GetMapping("/list")
     public String viewAddressTypeMethodPage(Model model){
         model.addAttribute("updateFormLink", updateFormLink);
-        model.addAttribute("listAddressType", addressesService.getAllAddresses());
+        model.addAttribute("listAddressType", addressTypesService.getAllAddressTypes());
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("saveFormLink", saveFormLink);
         model.addAttribute("deleteFormLink", deleteFormLink);
@@ -51,7 +54,62 @@ public class AddressTypesController {
     }
 
     @PostMapping("/save")
-    public String save(Model model){
-        return null;
+    public String save(
+        @ModelAttribute("addressTypes") AddressTypesDto addressTypesDto
+    ){
+        logger.info("{}", addressTypesDto.toString());
+
+        addressTypesService.saveAddressTypes(new AddressTypes(
+            addressTypesDto.getAddressTypeCode(),
+            addressTypesDto.getAddressTypeDescription()
+        ));
+
+        return "redirect:/address-type/list";
+    }
+
+    @GetMapping("/update-form/{id}")
+    public String updateFormAddressTypes(
+        @PathVariable Long id,
+        Model model
+    ){
+        AddressTypes addressTypes = addressTypesService.getAddressTypesById(id);
+
+        AddressTypesDto addressTypesDto = new AddressTypesDto(
+            addressTypes.getAddressTypeCode(),
+            addressTypes.getAddressTypeDescription()
+        );
+
+        model.addAttribute("updateFormLink", updateFormLink + '/' + id);
+        model.addAttribute("listLink", listLink);
+        model.addAttribute("titleCRUD", titleCRUD);
+        model.addAttribute("addressTypesDto", addressTypesDto);
+        model.addAttribute("addressTypesId", id);
+
+        return "address_type_ui/update_address_type";
+    }
+
+    @PostMapping("/update-form/{id}")
+    public String updateAddressTypes(
+        @PathVariable(value = "id") Long id,
+        @ModelAttribute("addressTypes") AddressTypesDto addressTypesDto
+    ){
+        AddressTypes addressTypes = new AddressTypes(
+            addressTypesDto.getAddressTypeCode(),
+            addressTypesDto.getAddressTypeDescription()
+        );
+
+        addressTypes.setAddressTypeId(id);
+
+        addressTypesService.saveAddressTypes(addressTypes);
+
+        return "redirect:/address-type/list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteAdderssTypes(
+        @PathVariable(value = "id") Long id
+    ){
+        this.addressTypesService.deleteAddressTypesById(id);
+        return "redirect:/address-type/list";
     }
 }

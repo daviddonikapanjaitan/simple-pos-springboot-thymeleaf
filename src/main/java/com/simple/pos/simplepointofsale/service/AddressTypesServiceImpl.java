@@ -16,17 +16,17 @@ public class AddressTypesServiceImpl implements AddressTypesService{
     private AddressTypesRepository addressTypesRepository;
 
     @Override
-    public List<AddressTypes> getAllCustomersAddress() {
+    public List<AddressTypes> getAllAddressTypes() {
         return addressTypesRepository.findAll();
     }
 
     @Override
-    public void saveCustomerAddress(AddressTypes addressTypes) {
+    public void saveAddressTypes(AddressTypes addressTypes) {
         this.addressTypesRepository.save(addressTypes);
     }
 
     @Override
-    public AddressTypes getCustomerAddressById(Long id) {
+    public AddressTypes getAddressTypesById(Long id) {
         Optional<AddressTypes> optional = addressTypesRepository.findById(id);
         AddressTypes addressTypes = null;
         if(optional.isPresent()){
@@ -39,7 +39,7 @@ public class AddressTypesServiceImpl implements AddressTypesService{
     }
 
     @Override
-    public void deleteCustomerAddressById(Long id) {
+    public void deleteAddressTypesById(Long id) {
         this.addressTypesRepository.deleteById(id);
     }
 }

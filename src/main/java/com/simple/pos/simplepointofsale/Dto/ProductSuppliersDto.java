@@ -1,18 +1,17 @@
 package com.simple.pos.simplepointofsale.Dto;
 
-import java.util.Date;
-
 public class ProductSuppliersDto {
     
     private Long productId;
     private String supplierCode;
-    private Date valueSuppliedToDate;
+    private Long valueSuppliedToDate;
     private Long totalQuantitySuppliedToDate;
-    private Date firstItemSuppliedDate;
-    private Date lastItemSuppliedDate;
-    private Long deliveryLeadTime;
+    private String firstItemSuppliedDate;
+    private String lastItemSuppliedDate;
+    private String deliveryLeadTime;
     private Long standardPrice;
-    private Long percentageDiscountMinimumOrderQuantity;
+    private Long percentageDiscount;
+    private Long MinimumOrderQuantity;
     private Long maximumOrderQuantity;
     private String otherItemSuppliersDetails;
 
@@ -20,11 +19,10 @@ public class ProductSuppliersDto {
 
     }
 
-    public ProductSuppliersDto(Long productId, String supplierCode, Date valueSuppliedToDate,
-            Long totalQuantitySuppliedToDate, Date firstItemSuppliedDate, Date lastItemSuppliedDate,
-            Long deliveryLeadTime, Long standardPrice, Long percentageDiscountMinimumOrderQuantity,
+    public ProductSuppliersDto(Long productId, String supplierCode, Long valueSuppliedToDate,
+            Long totalQuantitySuppliedToDate, String firstItemSuppliedDate, String lastItemSuppliedDate,
+            String deliveryLeadTime, Long standardPrice, Long percentageDiscount, Long minimumOrderQuantity,
             Long maximumOrderQuantity, String otherItemSuppliersDetails) {
-        super();
         this.productId = productId;
         this.supplierCode = supplierCode;
         this.valueSuppliedToDate = valueSuppliedToDate;
@@ -33,7 +31,8 @@ public class ProductSuppliersDto {
         this.lastItemSuppliedDate = lastItemSuppliedDate;
         this.deliveryLeadTime = deliveryLeadTime;
         this.standardPrice = standardPrice;
-        this.percentageDiscountMinimumOrderQuantity = percentageDiscountMinimumOrderQuantity;
+        this.percentageDiscount = percentageDiscount;
+        MinimumOrderQuantity = minimumOrderQuantity;
         this.maximumOrderQuantity = maximumOrderQuantity;
         this.otherItemSuppliersDetails = otherItemSuppliersDetails;
     }
@@ -54,11 +53,11 @@ public class ProductSuppliersDto {
         this.supplierCode = supplierCode;
     }
 
-    public Date getValueSuppliedToDate() {
+    public Long getValueSuppliedToDate() {
         return valueSuppliedToDate;
     }
 
-    public void setValueSuppliedToDate(Date valueSuppliedToDate) {
+    public void setValueSuppliedToDate(Long valueSuppliedToDate) {
         this.valueSuppliedToDate = valueSuppliedToDate;
     }
 
@@ -70,27 +69,27 @@ public class ProductSuppliersDto {
         this.totalQuantitySuppliedToDate = totalQuantitySuppliedToDate;
     }
 
-    public Date getFirstItemSuppliedDate() {
+    public String getFirstItemSuppliedDate() {
         return firstItemSuppliedDate;
     }
 
-    public void setFirstItemSuppliedDate(Date firstItemSuppliedDate) {
+    public void setFirstItemSuppliedDate(String firstItemSuppliedDate) {
         this.firstItemSuppliedDate = firstItemSuppliedDate;
     }
 
-    public Date getLastItemSuppliedDate() {
+    public String getLastItemSuppliedDate() {
         return lastItemSuppliedDate;
     }
 
-    public void setLastItemSuppliedDate(Date lastItemSuppliedDate) {
+    public void setLastItemSuppliedDate(String lastItemSuppliedDate) {
         this.lastItemSuppliedDate = lastItemSuppliedDate;
     }
 
-    public Long getDeliveryLeadTime() {
+    public String getDeliveryLeadTime() {
         return deliveryLeadTime;
     }
 
-    public void setDeliveryLeadTime(Long deliveryLeadTime) {
+    public void setDeliveryLeadTime(String deliveryLeadTime) {
         this.deliveryLeadTime = deliveryLeadTime;
     }
 
@@ -102,12 +101,20 @@ public class ProductSuppliersDto {
         this.standardPrice = standardPrice;
     }
 
-    public Long getPercentageDiscountMinimumOrderQuantity() {
-        return percentageDiscountMinimumOrderQuantity;
+    public Long getPercentageDiscount() {
+        return percentageDiscount;
     }
 
-    public void setPercentageDiscountMinimumOrderQuantity(Long percentageDiscountMinimumOrderQuantity) {
-        this.percentageDiscountMinimumOrderQuantity = percentageDiscountMinimumOrderQuantity;
+    public void setPercentageDiscount(Long percentageDiscount) {
+        this.percentageDiscount = percentageDiscount;
+    }
+
+    public Long getMinimumOrderQuantity() {
+        return MinimumOrderQuantity;
+    }
+
+    public void setMinimumOrderQuantity(Long minimumOrderQuantity) {
+        MinimumOrderQuantity = minimumOrderQuantity;
     }
 
     public Long getMaximumOrderQuantity() {
@@ -128,12 +135,12 @@ public class ProductSuppliersDto {
 
     @Override
     public String toString() {
-        return "ProductSuppliersDto [deliveryLeadTime=" + deliveryLeadTime + ", firstItemSuppliedDate="
-                + firstItemSuppliedDate + ", lastItemSuppliedDate=" + lastItemSuppliedDate + ", maximumOrderQuantity="
-                + maximumOrderQuantity + ", otherItemSuppliersDetails=" + otherItemSuppliersDetails
-                + ", percentageDiscountMinimumOrderQuantity=" + percentageDiscountMinimumOrderQuantity + ", productId="
-                + productId + ", standardPrice=" + standardPrice + ", supplierCode=" + supplierCode
-                + ", totalQuantitySuppliedToDate=" + totalQuantitySuppliedToDate + ", valueSuppliedToDate="
-                + valueSuppliedToDate + "]";
+        return "ProductSuppliersDto [MinimumOrderQuantity=" + MinimumOrderQuantity + ", deliveryLeadTime="
+                + deliveryLeadTime + ", firstItemSuppliedDate=" + firstItemSuppliedDate + ", lastItemSuppliedDate="
+                + lastItemSuppliedDate + ", maximumOrderQuantity=" + maximumOrderQuantity
+                + ", otherItemSuppliersDetails=" + otherItemSuppliersDetails + ", percentageDiscount="
+                + percentageDiscount + ", productId=" + productId + ", standardPrice=" + standardPrice
+                + ", supplierCode=" + supplierCode + ", totalQuantitySuppliedToDate=" + totalQuantitySuppliedToDate
+                + ", valueSuppliedToDate=" + valueSuppliedToDate + "]";
     }
 }

@@ -19,7 +19,7 @@ public class ProductTypes {
     private String productTypeCode;
 
     @Column(name = "product_type_description")
-    private String productTypeDecription;
+    private String productTypeDescription;
 
     public ProductTypes(){
 
@@ -27,14 +27,14 @@ public class ProductTypes {
 
     @Override
     public String toString() {
-        return "ProductTypes [productTypeCode=" + productTypeCode + ", productTypeDecription=" + productTypeDecription
+        return "ProductTypes [productTypeCode=" + productTypeCode + ", productTypeDescription=" + productTypeDescription
                 + ", productTypeId=" + productTypeId + "]";
     }
 
-    public ProductTypes(String productTypeCode, String productTypeDecription) {
+    public ProductTypes(String productTypeCode, String productTypeDescription) {
         super();
         this.productTypeCode = productTypeCode;
-        this.productTypeDecription = productTypeDecription;
+        this.productTypeDescription = productTypeDescription;
     }
 
     public Long getProductTypeId() {
@@ -53,11 +53,11 @@ public class ProductTypes {
         this.productTypeCode = productTypeCode;
     }
 
-    public String getProductTypeDecription() {
-        return productTypeDecription;
+    public String getProductTypeDescription() {
+        return productTypeDescription;
     }
 
-    public void setProductTypeDecription(String productTypeDecription) {
-        this.productTypeDecription = productTypeDecription;
+    public void setProductTypeDescription(String productTypeDescription) {
+        this.productTypeDescription = productTypeDescription;
     }
 }

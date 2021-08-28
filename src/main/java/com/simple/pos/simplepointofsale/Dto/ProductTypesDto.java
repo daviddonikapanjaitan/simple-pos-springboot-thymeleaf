@@ -2,25 +2,24 @@ package com.simple.pos.simplepointofsale.Dto;
 
 public class ProductTypesDto {
  
-    private String producTypeCode;
+    private String productTypeCode;
     private String productTypeDescription;
 
     public ProductTypesDto(){
         
     }
 
-    public ProductTypesDto(String producTypeCode, String productTypeDescription) {
-        super();
-        this.producTypeCode = producTypeCode;
+    public ProductTypesDto(String productTypeCode, String productTypeDescription) {
+        this.productTypeCode = productTypeCode;
         this.productTypeDescription = productTypeDescription;
     }
 
-    public String getProducTypeCode() {
-        return producTypeCode;
+    public String getProductTypeCode() {
+        return productTypeCode;
     }
 
-    public void setProducTypeCode(String producTypeCode) {
-        this.producTypeCode = producTypeCode;
+    public void setProductTypeCode(String productTypeCode) {
+        this.productTypeCode = productTypeCode;
     }
 
     public String getProductTypeDescription() {
@@ -33,7 +32,7 @@ public class ProductTypesDto {
 
     @Override
     public String toString() {
-        return "ProductTypesDto [producTypeCode=" + producTypeCode + ", productTypeDescription="
+        return "ProductTypesDto [productTypeCode=" + productTypeCode + ", productTypeDescription="
                 + productTypeDescription + "]";
     }
 }

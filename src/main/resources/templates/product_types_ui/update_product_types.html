@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <div th:replace="head_fragments/head_customers :: head"></div>
+
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+
+        <main role="main" class="container">
+            <div class="container">
+                <h1 th:text=" ${saveOrUpdate} + ' ' +  ${titleCRUD}"></h1>
+        
+                <div class="container">
+
+                    <form action="#" th:action="@{/{updateFormLink}(updateFormLink=${updateFormLink})}" th:object="${productTypesDto}" method="POST">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Product Type Code</label>
+                            <input type="text" th:field="*{productTypeCode}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Product Type Description</label>
+                            <input type="text" th:field="*{productTypeDescription}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <button th:text=" ${saveOrUpdate} + ' ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>
+                        <a th:href="@{/{link}(link=${listLink})}" th:text="'  Back to ' + ${titleCRUD} + ' List'" type="button" class="btn btn-info"></a>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

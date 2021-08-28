@@ -48,7 +48,11 @@ public class Products {
         this.productDescription = productDescription;
     }
 
-    public void setProducstId(Long productId) {
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
         this.productId = productId;
     }
 

@@ -6,8 +6,8 @@ import com.simple.pos.simplepointofsale.model.Products;
 
 public interface ProductsService {
     
-    List<Products> getAllProductTypes();
-    void saveProductTypes(Products products);
-    Products getProductTypesById(Long id);
-    void deleteProductTypes(Long id);
+    List<Products> getAllProduct();
+    void saveProduct(Products products);
+    Products getProductById(Long id);
+    void deleteProduct(Long id);
 }

@@ -8,7 +8,7 @@ import com.simple.pos.simplepointofsale.repository.ProductsRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+ 
 @Service
 public class ProductsServiceImpl implements ProductsService{
 
@@ -16,17 +16,17 @@ public class ProductsServiceImpl implements ProductsService{
     private ProductsRepository productsRepository;
 
     @Override
-    public List<Products> getAllProductTypes() {
+    public List<Products> getAllProduct() {
         return productsRepository.findAll();
     }
 
     @Override
-    public void saveProductTypes(Products products) {
+    public void saveProduct(Products products) {
         this.productsRepository.save(products);
     }
 
     @Override
-    public Products getProductTypesById(Long id) {
+    public Products getProductById(Long id) {
         Optional<Products> optional = productsRepository.findById(id);
         Products products = null;
 
@@ -39,7 +39,7 @@ public class ProductsServiceImpl implements ProductsService{
     }
 
     @Override
-    public void deleteProductTypes(Long id) {
+    public void deleteProduct(Long id) {
         this.productsRepository.deleteById(id);
     }
 }

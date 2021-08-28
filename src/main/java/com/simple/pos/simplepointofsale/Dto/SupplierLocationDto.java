@@ -1,26 +1,24 @@
 package com.simple.pos.simplepointofsale.Dto;
 
-import java.util.Date;
-
-
 public class SupplierLocationDto{
 
     private String supplierCode;
     private Long addressId;
-    private Date dateFrom;
-    private Date dateTo;
-
+    private String dateFrom;
+    private String dateTo;
+    
     public SupplierLocationDto(){
 
     }
     
-    public SupplierLocationDto(String supplierCode, Long addressId, Date dateFrom, Date dateTo) {
+    public SupplierLocationDto(String supplierCode, Long addressId, String dateFrom, String dateTo) {
         super();
         this.supplierCode = supplierCode;
         this.addressId = addressId;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
     }
+
     public String getSupplierCode() {
         return supplierCode;
     }
@@ -33,18 +31,19 @@ public class SupplierLocationDto{
     public void setAddressId(Long addressId) {
         this.addressId = addressId;
     }
-    public Date getDateFrom() {
+    public String getDateFrom() {
         return dateFrom;
     }
-    public void setDateFrom(Date dateFrom) {
+    public void setDateFrom(String dateFrom) {
         this.dateFrom = dateFrom;
     }
-    public Date getDateTo() {
+    public String getDateTo() {
         return dateTo;
     }
-    public void setDateTo(Date dateTo) {
+    public void setDateTo(String dateTo) {
         this.dateTo = dateTo;
     }
+
     @Override
     public String toString() {
         return "SupplierLocationDto [addressId=" + addressId + ", dateFrom=" + dateFrom + ", dateTo=" + dateTo

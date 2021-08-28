@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <div th:replace="head_fragments/head_customers :: head"></div>
+
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+
+        <main role="main" class="container">
+            <div class="container my-2">
+                <h1 th:text="${titleCRUD} + ' List'"></h1>
+                <a th:href="@{/{pathSave}(pathSave=${saveFormLink})}" th:text="'Add ' +  ${titleCRUD}" class="btn btn-primary btn-sm mb-3"></a>
+        
+                <table border="1" class="table table-striped table-responsive-md">
+                    <thead>
+                        <tr>
+                            <th>Supplier Location ID</th>
+                            <th>Supplier Code</th>
+                            <th>Address ID</th>
+                            <th>Date From</th>
+                            <th>Date To</th>
+                            <th> Actions </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="supplierLocation : ${listSupplierLocations}">
+                            <td th:text="${supplierLocation.supplierLocationId}"></td>
+                            <td th:text="${supplierLocation.supplierCode}"></td>
+                            <td th:text="${supplierLocation.addressId}"></td>
+                            <td th:text="${supplierLocation.dateFrom}"></td>
+                            <td th:text="${supplierLocation.dateTo}"></td>
+                            <td> <a th:href="@{'/' + ${updateFormLink} + '/' + ${supplierLocation.supplierLocationId}}" class="btn btn-primary">Update</a>
+                                <a th:href="@{'/' + ${deleteFormLink} + '/' + ${supplierLocation.supplierLocationId}}" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listSupplierLocations)}">
+                            <td class="text-center" colspan="6">Data is Empty</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </body>
+</html>

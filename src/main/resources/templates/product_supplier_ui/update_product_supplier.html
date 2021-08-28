@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <div th:replace="head_fragments/head_customers :: head"></div>
+
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+
+        <main role="main" class="container">
+            <div class="container">
+                <h1 th:text=" ${saveOrUpdate} + ' ' +  ${titleCRUD}"></h1>
+        
+                <div class="container">
+
+                    <form action="#" th:action="@{/{updateFormLink}(updateFormLink=${updateFormLink})}" th:object="${productSuppliersDto}" method="POST">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Product Id</label>
+                            <input type="text" th:field="*{productId}" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Supplier Code</label>
+                            <input type="text" th:field="*{supplierCode}" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Value Supplied To date</label>
+                            <input type="text" th:field="*{valueSuppliedToDate}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Total Quantity Supplied To Date</label>
+                            <input type="text" th:field="*{totalQuantitySuppliedToDate}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">First Item Supplied Date</label>
+                            <input type="date" th:field="*{firstItemSuppliedDate}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Last Item Supplied Date</label>
+                            <input type="date" th:field="*{lastItemSuppliedDate}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Delivery Lead Time</label>
+                            <input type="date" th:field="*{deliveryLeadTime}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Standard Price</label>
+                            <input type="text" th:field="*{standardPrice}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Percentage Discount</label>
+                            <input type="text" th:field="*{percentageDiscount}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Minimum Order Quantity</label>
+                            <input type="text" th:field="*{minimumOrderQuantity}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Maximum Order Quantity</label>
+                            <input type="text" th:field="*{maximumOrderQuantity}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Other Item Suppliers Details</label>
+                            <textarea type="text" th:field="*{otherItemSuppliersDetails}" class="form-control" rows="5"></textarea>
+                        </div>
+
+                        <button th:text=" ${saveOrUpdate} + ' ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>
+                        <a th:href="@{/{link}(link=${listLink})}" th:text="'  Back to ' + ${titleCRUD} + ' List'" type="button" class="btn btn-info"></a>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

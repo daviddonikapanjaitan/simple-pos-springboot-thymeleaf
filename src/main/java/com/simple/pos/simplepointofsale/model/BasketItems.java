@@ -18,7 +18,7 @@ public class BasketItems {
     private Long basketItemsId;
 
     @Column(name = "cusotmer_id")
-    private String customerName;
+    private Long customerId;
 
     @Column(name = "basket_datetime")
     private Date basketDateTime;
@@ -32,23 +32,17 @@ public class BasketItems {
     @Column(name = "cost")
     private Long cost;
 
-    public BasketItems(String customerName, Date basketDateTime, Long productId, Long quantity, Long cost) {
-        super();
-        this.customerName = customerName;
-        this.basketDateTime = basketDateTime;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.cost = cost;
-    }
-
     public BasketItems(){
 
     }
 
-    @Override
-    public String toString() {
-        return "BasketItems [basketDateTime=" + basketDateTime + ", basketItemsId=" + basketItemsId + ", cost=" + cost
-                + ", customerName=" + customerName + ", productId=" + productId + ", quantity=" + quantity + "]";
+    public BasketItems(Long customerId, Date basketDateTime, Long productId, Long quantity, Long cost) {
+        super();
+        this.customerId = customerId;
+        this.basketDateTime = basketDateTime;
+        this.productId = productId;
+        this.quantity = quantity;
+        this.cost = cost;
     }
 
     public Long getBasketItemsId() {
@@ -59,12 +53,12 @@ public class BasketItems {
         this.basketItemsId = basketItemsId;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
     public Date getBasketDateTime() {
@@ -97,5 +91,11 @@ public class BasketItems {
 
     public void setCost(Long cost) {
         this.cost = cost;
+    }
+
+    @Override
+    public String toString() {
+        return "BasketItems [basketDateTime=" + basketDateTime + ", basketItemsId=" + basketItemsId + ", cost=" + cost
+                + ", customerId=" + customerId + ", productId=" + productId + ", quantity=" + quantity + "]";
     }
 }

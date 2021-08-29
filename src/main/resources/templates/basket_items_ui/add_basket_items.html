@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <div th:replace="head_fragments/head_customers :: head"></div>
+
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+
+        <main role="main" class="container">
+            <div class="container">
+                <h1 th:text="'Add New ' +  ${titleCRUD}"></h1>
+        
+                <div class="container">
+
+                    <form action="#" th:action="@{/{postSaveLink}(postSaveLink=${postSaveLink})}" th:object="${basketItems}" method="POST">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Customer ID</label>
+                            <input type="text" th:field="*{customerId}" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Basket Date Time</label>
+                            <input type="date" th:field="*{basketDateTime}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Product ID</label>
+                            <input type="text" th:field="*{productId}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Quantity</label>
+                            <input type="text" th:field="*{quantity}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Cost</label>
+                            <input type="text" th:field="*{cost}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <button th:text="'Save ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>
+                        <a th:href="@{/{link}(link=${listLink})}" th:text="'  Back to ' + ${titleCRUD} + ' List'" type="button" class="btn btn-info"></a>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

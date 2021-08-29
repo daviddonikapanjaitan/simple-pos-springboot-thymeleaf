@@ -3,7 +3,6 @@ package com.simple.pos.simplepointofsale.controller;
 import com.simple.pos.simplepointofsale.Dto.ProductTypesDto;
 import com.simple.pos.simplepointofsale.model.ProductTypes;
 import com.simple.pos.simplepointofsale.service.ProductTypesService;
-import com.simple.pos.simplepointofsale.utils.ConverterService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +33,6 @@ public class ProductTypesController {
 
     @Autowired
     private ProductTypesService productTypesService;
-
-    @Autowired
-    private ConverterService converterService;
 
     @GetMapping("/list")
     public String viewProductTypesMethodPage(Model model){

@@ -6,8 +6,8 @@ import com.simple.pos.simplepointofsale.model.BasketItems;
 
 public interface BasketItemsService {
     
-    List<BasketItems> getAllAddresses();
-    void saveAddresses(BasketItems BasketItems);
-    BasketItems getAddressesById(Long id);
-    void deleteAddressesById(Long id);
+    List<BasketItems> getAllBasketItems();
+    void saveBasketItems(BasketItems BasketItems);
+    BasketItems getBasketItemsById(Long id);
+    void deleteBasketItemsById(Long id);
 }

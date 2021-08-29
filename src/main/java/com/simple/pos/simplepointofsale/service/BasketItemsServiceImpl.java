@@ -16,17 +16,17 @@ public class BasketItemsServiceImpl implements BasketItemsService{
     private BasketItemsRepository basketItemsRepository;
 
     @Override
-    public List<BasketItems> getAllAddresses() {
+    public List<BasketItems> getAllBasketItems() {
         return basketItemsRepository.findAll();
     }
 
     @Override
-    public void saveAddresses(BasketItems basketItems) {
+    public void saveBasketItems(BasketItems basketItems) {
         this.basketItemsRepository.save(basketItems);
     }
 
     @Override
-    public BasketItems getAddressesById(Long id) {
+    public BasketItems getBasketItemsById(Long id) {
         Optional<BasketItems> optional = basketItemsRepository.findById(id);
         BasketItems basketItems = null;
         if(optional.isPresent()){
@@ -39,7 +39,7 @@ public class BasketItemsServiceImpl implements BasketItemsService{
     }
 
     @Override
-    public void deleteAddressesById(Long id) {
+    public void deleteBasketItemsById(Long id) {
         this.basketItemsRepository.deleteById(id);
     }
 }

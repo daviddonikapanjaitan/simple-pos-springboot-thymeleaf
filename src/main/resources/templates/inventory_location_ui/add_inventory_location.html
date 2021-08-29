@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <div th:replace="head_fragments/head_customers :: head"></div>
+
+    <body>
+        <div th:replace="fragments/header :: header"></div>
+
+        <main role="main" class="container">
+            <div class="container">
+                <h1 th:text=" ${saveOrUpdate} + ' ' +  ${titleCRUD}"></h1>
+        
+                <div class="container">
+
+                    <form action="#" th:action="@{/{postSaveLink}(postSaveLink=${postSaveLink})}" th:object="${inventoryLocations}" method="POST">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Product ID</label>
+                            <input type="text" th:field="*{productId}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Location Address ID</label>
+                            <input type="text" th:field="*{locationAddressId}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Quantity in Stock</label>
+                            <input type="text" th:field="*{quantityInStock}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Reorder Level</label>
+                            <input type="text" th:field="*{reorderLevel}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Reorder Quantity</label>
+                            <input type="text" th:field="*{reorderQuantity}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Total Average Monthly Usage</label>
+                            <input type="text" th:field="*{totalAverageMonthlyUsage}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Other Inventory Details</label>
+                            <input type="text" th:field="*{otherInventoryDetails}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <button th:text=" ${saveOrUpdate} + ' ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>
+                        <a th:href="@{/{link}(link=${listLink})}" th:text="'  Back to ' + ${titleCRUD} + ' List'" type="button" class="btn btn-info"></a>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

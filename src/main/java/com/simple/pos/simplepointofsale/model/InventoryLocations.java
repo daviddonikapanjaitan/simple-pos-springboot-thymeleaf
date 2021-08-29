@@ -25,7 +25,7 @@ public class InventoryLocations {
     private Long quantityInStock;
 
     @Column(name = "reorder_level")
-    private Long reorder_level;
+    private Long reorderLevel;
 
     @Column(name = "reorded_quantity")
     private Long reorderQuantity;
@@ -40,13 +40,12 @@ public class InventoryLocations {
         
     }
 
-    public InventoryLocations(Long inventoryLocationsId, Long productId, Long locationAddressId, Long quantityInStock,
-        Long reorder_level, Long reorderQuantity, Long totalAverageMonthlyUsage, String otherInventoryDetails) {
-        super();
+    public InventoryLocations(Long productId, Long locationAddressId, Long quantityInStock, Long reorderLevel,
+            Long reorderQuantity, Long totalAverageMonthlyUsage, String otherInventoryDetails) {
         this.productId = productId;
         this.locationAddressId = locationAddressId;
         this.quantityInStock = quantityInStock;
-        this.reorder_level = reorder_level;
+        this.reorderLevel = reorderLevel;
         this.reorderQuantity = reorderQuantity;
         this.totalAverageMonthlyUsage = totalAverageMonthlyUsage;
         this.otherInventoryDetails = otherInventoryDetails;
@@ -84,12 +83,12 @@ public class InventoryLocations {
         this.quantityInStock = quantityInStock;
     }
 
-    public Long getReorder_level() {
-        return reorder_level;
+    public Long getReorderLevel() {
+        return reorderLevel;
     }
 
-    public void setReorder_level(Long reorder_level) {
-        this.reorder_level = reorder_level;
+    public void setReorderLevel(Long reorderLevel) {
+        this.reorderLevel = reorderLevel;
     }
 
     public Long getReorderQuantity() {
@@ -120,7 +119,7 @@ public class InventoryLocations {
     public String toString() {
         return "InventoryLocations [inventoryLocationsId=" + inventoryLocationsId + ", locationAddressId="
                 + locationAddressId + ", otherInventoryDetails=" + otherInventoryDetails + ", productId=" + productId
-                + ", quantityInStock=" + quantityInStock + ", reorderQuantity=" + reorderQuantity + ", reorder_level="
-                + reorder_level + ", totalAverageMonthlyUsage=" + totalAverageMonthlyUsage + "]";
+                + ", quantityInStock=" + quantityInStock + ", reorderLevel=" + reorderLevel + ", reorderQuantity="
+                + reorderQuantity + ", totalAverageMonthlyUsage=" + totalAverageMonthlyUsage + "]";
     }
 }

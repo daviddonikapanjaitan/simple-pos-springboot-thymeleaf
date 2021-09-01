@@ -2,6 +2,7 @@ package com.simple.pos.simplepointofsale.service;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.simple.pos.simplepointofsale.Dto.UserRegistrationDto;
@@ -9,6 +10,8 @@ import com.simple.pos.simplepointofsale.model.Role;
 import com.simple.pos.simplepointofsale.model.User;
 import com.simple.pos.simplepointofsale.repository.UserRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +24,8 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
+    
+    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -41,6 +46,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        logger.info("Username: " + username);
        
         User user = userRepository.findByEmail(username);
         if(user == null){
@@ -52,5 +58,10 @@ public class UserServiceImpl implements UserService{
 
     private Collection<? extends GrantedAuthority> mapRolesToAsuthorities(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

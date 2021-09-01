@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="ISO-8859-1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,29 +17,40 @@
             <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
               <div class="card border-0 shadow rounded-3 my-5">
                 <div class="card-body p-4 p-sm-5">
-                  <h5 class="card-title text-center mb-5 fw-light fs-5">Sign In</h5>
-                  <form th:action="@{/login}" method="post">
+                  <h5 class="card-title text-center mb-5 fw-light fs-5">Registration Form</h5>
+                  <form th:action="@{/registration}" method="post" th:object="${user}">
                     <div class="form-floating mb-3">
-                      <label for="floatingInput">Email address</label>
-                      <input type="email" class="form-control" id="username" name="username" placeholder="name@example.com">
+                        <label for="floatingInput">First Name</label>
+                        <input th:field="*{firstName}" type="text" class="form-control" id="floatingInput">
+                    </div>
+                    <div class="form-floating mb-3">
+                        <label for="floatingInput">Last Name</label>
+                        <input th:field="*{lastName}" type="text" class="form-control" id="floatingInput">
+                    </div>
+                    <div class="form-floating mb-3">
+                        <label for="floatingInput">Email</label>
+                        <input th:field="*{email}" type="email" class="form-control" id="floatingInput">
                     </div>
                     <div class="form-floating mb-3">
                        <label for="floatingPassword">Password</label>
-                       <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                       <input th:field="*{password}" type="password" class="form-control" id="floatingPassword">
                     </div>
-                    <div class="form-check mb-3">
+                    <!-- <div class="form-floating mb-3">
+                        <label for="floatingPassword">Confirm Password</label>
+                        <input type="password" class="form-control" id="floatingPassword">
+                     </div> -->
+                    <!-- <div class="form-check mb-3">
                       <input class="form-check-input" type="checkbox" value="" id="rememberPasswordCheck">
                       <label class="form-check-label" for="rememberPasswordCheck">
                         Remember password
                       </label>
-                    </div>
+                    </div> -->
                     <div class="d-grid">
-                      <h4 th:text="${message}"></h4>
-                      <button class="btn btn-primary form-control btn-login text-uppercase fw-bold" type="submit">Sign in</button>
+                      <button class="btn btn-primary form-control btn-login text-uppercase fw-bold" type="submit">Register</button>
                     </div>
                     <hr class="my-3">
                     <div class="d-grid mb-2">
-                      <a th:href="@{/registration}" class="fab fa-google me-2 btn form-control btn-google btn-login text-uppercase fw-bold">Register</a>
+                        <a th:href="@{/login}" class="btn form-control btn-google btn-login text-uppercase fw-bold fab fa-google me-2" type="button"> Back To Login</a>
                     </div>
                   </form>
                 </div>

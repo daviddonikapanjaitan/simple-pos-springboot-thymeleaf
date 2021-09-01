@@ -2,7 +2,6 @@ package com.simple.pos.simplepointofsale.service;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.simple.pos.simplepointofsale.Dto.UserRegistrationDto;
@@ -13,8 +12,11 @@ import com.simple.pos.simplepointofsale.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -63,5 +65,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null || AnonymousAuthenticationToken.class.isAssignableFrom(authentication.getClass())){
+            return false;
+        }
+        
+        return authentication.isAuthenticated();
     }
 }

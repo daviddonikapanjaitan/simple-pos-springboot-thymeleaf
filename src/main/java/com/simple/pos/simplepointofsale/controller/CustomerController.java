@@ -7,6 +7,7 @@ import java.util.Date;
 import com.simple.pos.simplepointofsale.Dto.CustomerDto;
 import com.simple.pos.simplepointofsale.model.Customer;
 import com.simple.pos.simplepointofsale.service.CustomerService;
+import com.simple.pos.simplepointofsale.service.UserService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
 
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
- 
+    
 @Controller
 public class CustomerController {
 
@@ -30,8 +31,15 @@ public class CustomerController {
     @Autowired
     private ConverterService converterService;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping("/")
     public String viewCustomerPage(Model model){
+        if(userService.checkRole("ROLE_USER")){
+            logger.info("ROLE_USESR");
+        }
+
         model.addAttribute("listCustomers", customerService.getAllCustomers());
         return "customers_ui/index";
     }

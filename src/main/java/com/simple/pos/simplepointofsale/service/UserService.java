@@ -12,4 +12,6 @@ public interface UserService extends UserDetailsService{
     User save(UserRegistrationDto registrationDto);
 
     boolean isAuthenticated();
+
+    boolean checkRole(String role);
 }

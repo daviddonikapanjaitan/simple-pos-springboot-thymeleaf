@@ -3,6 +3,7 @@ package com.simple.pos.simplepointofsale.controller;
 import com.simple.pos.simplepointofsale.Dto.AddressesDto;
 import com.simple.pos.simplepointofsale.model.Addresses;
 import com.simple.pos.simplepointofsale.service.AddressesService;
+import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+   
 @Controller
 @RequestMapping("/addresses")
 public class AddressesController {
@@ -31,8 +32,13 @@ public class AddressesController {
     @Autowired
     private AddressesService addressesService;
 
+    @Autowired
+    AddAttributeService addAttributeService;
+
     @GetMapping("/list")
     public String viewAddressMethodPage(Model model){
+        addAttributeService.addFirstNameAttribute(model);
+
         model.addAttribute("updateFormLink", updateFormLink);
         model.addAttribute("listAddresses", addressesService.getAllAddresses());
         model.addAttribute("titleCRUD", titleCRUD);
@@ -43,6 +49,7 @@ public class AddressesController {
 
     @GetMapping("/add-form")
     public String addForm(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         Addresses addresses = new Addresses();
 
         model.addAttribute("titleCRUD", titleCRUD);
@@ -80,6 +87,7 @@ public class AddressesController {
         Model model
     ){
         Addresses addresses = addressesService.getAddressesById(id);
+        addAttributeService.addFirstNameAttribute(model);
 
         AddressesDto addressesDto = new AddressesDto(
             addresses.getLine1(),

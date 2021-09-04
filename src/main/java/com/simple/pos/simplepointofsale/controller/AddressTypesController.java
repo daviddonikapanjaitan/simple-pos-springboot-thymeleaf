@@ -3,6 +3,8 @@ package com.simple.pos.simplepointofsale.controller;
 import com.simple.pos.simplepointofsale.Dto.AddressTypesDto;
 import com.simple.pos.simplepointofsale.model.AddressTypes;
 import com.simple.pos.simplepointofsale.service.AddressTypesService;
+import com.simple.pos.simplepointofsale.service.AddressesService;
+import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +33,13 @@ public class AddressTypesController {
     @Autowired
     private AddressTypesService addressTypesService;
 
+    @Autowired
+    AddAttributeService addAttributeService;
+
     @GetMapping("/list")
     public String viewAddressTypeMethodPage(Model model){
+        addAttributeService.addFirstNameAttribute(model);
+
         model.addAttribute("updateFormLink", updateFormLink);
         model.addAttribute("listAddressType", addressTypesService.getAllAddressTypes());
         model.addAttribute("titleCRUD", titleCRUD);
@@ -43,6 +50,7 @@ public class AddressTypesController {
 
     @GetMapping("/add-form")
     public String addForm(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         AddressTypes addressTypes = new AddressTypes();
 
         model.addAttribute("titleCRUD", titleCRUD);
@@ -72,6 +80,7 @@ public class AddressTypesController {
         @PathVariable Long id,
         Model model
     ){
+        addAttributeService.addFirstNameAttribute(model);
         AddressTypes addressTypes = addressTypesService.getAddressTypesById(id);
 
         AddressTypesDto addressTypesDto = new AddressTypesDto(

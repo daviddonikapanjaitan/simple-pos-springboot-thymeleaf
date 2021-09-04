@@ -1,7 +1,5 @@
 package com.simple.pos.simplepointofsale.Dto;
 
-import java.util.Date;
-
 public class ShoppingBasketDto {
     
     private String customerId;

@@ -61,22 +61,21 @@ public class UserServiceImpl implements UserService{
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("Username: " + username);
 
-        UserActivation userActivation = userActivationRepository.findByEmail(username);
-        logger.info(userActivation.toString());
-
-        if(userActivation == null){
-            logger.info("ERROR: System Error");
-            throw new UsernameNotFoundException("System Error.");
-        }
-       
         User user = userRepository.findByEmail(username);
         if(user == null){
             throw new UsernameNotFoundException("Invalid username or password.");
         }
 
+        UserActivation userActivation = userActivationRepository.findByEmail(username);
+        logger.info(userActivation.toString());
+
+        if(userActivation == null){
+			throw new UsernameNotFoundException("System Error");
+		}
+
         if(!userActivation.getActivation().equalsIgnoreCase("true")){
             logger.info("ERROR: System Error Email Validation");
-            throw new UsernameNotFoundException("System Error.");
+            throw new UsernameNotFoundException("System Error");
         }
 
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), mapRolesToAsuthorities(user.getRoles()));
@@ -107,7 +106,17 @@ public class UserServiceImpl implements UserService{
 
         boolean hasUserRole = authentication.getAuthorities().stream()
           .anyMatch(r -> r.getAuthority().equals(role));
-        
+
         return hasUserRole;
+    }
+
+    @Override
+    public String getFirstName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User user = findByEmail(currentPrincipalName);
+
+        return user.getFirstName().split(" ")[0];
     }
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 import com.simple.pos.simplepointofsale.Dto.ProductSuppliersDto;
 import com.simple.pos.simplepointofsale.model.ProductSuppliers;
 import com.simple.pos.simplepointofsale.service.ProductSupplierService;
+import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
 
 import org.slf4j.Logger;
@@ -39,8 +40,12 @@ public class ProductSuppliersController {
     @Autowired
     private ConverterService converterService;
 
+    @Autowired
+    AddAttributeService addAttributeService;
+
     @GetMapping("/list")
     public String viewProductSupplierMethodPage(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         model.addAttribute("updateFormLink", updateFormLink);
         model.addAttribute("listProductSupplier", productSupplierService.getAllProductSuppliers());
         model.addAttribute("titleCRUD", titleCRUD);
@@ -52,6 +57,7 @@ public class ProductSuppliersController {
 
     @GetMapping("/add-form")
     public String addForm(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         ProductSuppliers productSuppliers = new ProductSuppliers();
 
         model.addAttribute("titleCRUD", titleCRUD);
@@ -98,6 +104,7 @@ public class ProductSuppliersController {
         @PathVariable Long id,
         Model model
     ){
+        addAttributeService.addFirstNameAttribute(model);
         ProductSuppliers productSuppliers = productSupplierService.getProductSuppliersById(id);
         
         String firstItemSuppliedDate = converterService.dateToString(productSuppliers.getFirstItemSuppliedDate(), "yyyy-MM-dd");

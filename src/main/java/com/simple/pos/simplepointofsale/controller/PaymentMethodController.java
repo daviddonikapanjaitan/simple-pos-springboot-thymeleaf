@@ -5,6 +5,7 @@ import java.text.ParseException;
 import com.simple.pos.simplepointofsale.Dto.PaymentMethodDto;
 import com.simple.pos.simplepointofsale.model.PaymentMethod;
 import com.simple.pos.simplepointofsale.service.PaymentMethodService;
+import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +27,19 @@ public class PaymentMethodController {
     @Autowired
     private PaymentMethodService paymentMethodService;
 
+    @Autowired
+    AddAttributeService addAttributeService;
+
     @GetMapping("/list")
     public String viewPaymentMethodPage(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         model.addAttribute("listPaymentMethod", paymentMethodService.getAllPaymentMethod());
         return "paymentmethod_ui/index";
     }
 
     @GetMapping("/save-payment-method-form")
     public String paymetMethodForm(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         PaymentMethod paymentMethod = new PaymentMethod();
 
         model.addAttribute("paymentMethod", paymentMethod);
@@ -45,6 +51,7 @@ public class PaymentMethodController {
         @PathVariable(value = "id") Long id,
         Model model
     ){
+        addAttributeService.addFirstNameAttribute(model);
         PaymentMethod paymentMethod = paymentMethodService.getPaymentMethodById(id);
 
         PaymentMethodDto paymentMethodDto = new PaymentMethodDto(

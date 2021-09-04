@@ -4,7 +4,7 @@
     <div th:replace="head_fragments/head_customers :: head"></div>
 
     <body>
-        <div th:replace="fragments/header :: header"></div>
+        <div th:replace="fragments/header :: header(first_name=${first_name})"></div>
 
         <main role="main" class="container">
             <div class="container my-2">

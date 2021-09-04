@@ -3,6 +3,7 @@ package com.simple.pos.simplepointofsale.controller;
 import com.simple.pos.simplepointofsale.Dto.ProductsDto;
 import com.simple.pos.simplepointofsale.model.Products;
 import com.simple.pos.simplepointofsale.service.ProductsService;
+import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +34,12 @@ public class ProductController {
     @Autowired
     private ProductsService productsService;
 
+    @Autowired
+    AddAttributeService addAttributeService;
+
     @GetMapping("/list")
     public String viewProductMethodPage(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         model.addAttribute("updateFormLink", updateFormLink);
         model.addAttribute("listProduct", productsService.getAllProduct());
         model.addAttribute("titleCRUD", titleCRUD);
@@ -46,6 +51,7 @@ public class ProductController {
 
     @GetMapping("/add-form")
     public String addForm(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         Products products = new Products();
 
         model.addAttribute("titleCRUD", titleCRUD);
@@ -79,6 +85,7 @@ public class ProductController {
         @PathVariable(value = "id") Long id,
         Model model
     ){
+        addAttributeService.addFirstNameAttribute(model);
         Products products = productsService.getProductById(id);
 
         ProductsDto productsDto = new ProductsDto(

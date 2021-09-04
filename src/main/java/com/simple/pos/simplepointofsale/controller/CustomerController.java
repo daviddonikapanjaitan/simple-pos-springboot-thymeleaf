@@ -8,6 +8,7 @@ import com.simple.pos.simplepointofsale.Dto.CustomerDto;
 import com.simple.pos.simplepointofsale.model.Customer;
 import com.simple.pos.simplepointofsale.service.CustomerService;
 import com.simple.pos.simplepointofsale.service.UserService;
+import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
 
 import org.slf4j.Logger;
@@ -34,11 +35,16 @@ public class CustomerController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AddAttributeService addAttributeService;
+
     @GetMapping("/")
     public String viewCustomerPage(Model model){
         if(userService.checkRole("ROLE_USER")){
             logger.info("ROLE_USESR");
         }
+
+        addAttributeService.addFirstNameAttribute(model);
 
         model.addAttribute("listCustomers", customerService.getAllCustomers());
         return "customers_ui/index";
@@ -46,6 +52,8 @@ public class CustomerController {
    
     @GetMapping("/addNewCustomer")
     public String addNewCustomer(Model model){
+        addAttributeService.addFirstNameAttribute(model);
+
         Customer customer = new Customer();
         model.addAttribute("customer", customer);
         return "customers_ui/add_new_customer";
@@ -100,6 +108,7 @@ public class CustomerController {
         @PathVariable(value = "id") Long id,
         Model model
     ){
+        addAttributeService.addFirstNameAttribute(model);
         Customer customerDB = customerService.getCustomerById(id);
         String customerDate = converterService.dateToString(customerDB.getDateBecomeCustomer(), "yyyy-MM-dd");
 

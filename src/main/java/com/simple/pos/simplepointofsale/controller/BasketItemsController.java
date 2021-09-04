@@ -5,6 +5,7 @@ import java.util.Date;
 import com.simple.pos.simplepointofsale.Dto.BasketItemsDto;
 import com.simple.pos.simplepointofsale.model.BasketItems;
 import com.simple.pos.simplepointofsale.service.BasketItemsService;
+import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
 
 import org.slf4j.Logger;
@@ -39,8 +40,13 @@ public class BasketItemsController {
     @Autowired
     private ConverterService converterService;
 
+    @Autowired
+    AddAttributeService addAttributeService;
+
     @GetMapping("/list")
     public String viewBasketItemsMethodPage(Model model){
+        addAttributeService.addFirstNameAttribute(model);
+
         model.addAttribute("updateFormLink", updateFormLink);
         model.addAttribute("listBasketItems", basketItemsService.getAllBasketItems());
         model.addAttribute("titleCRUD", titleCRUD);
@@ -52,6 +58,7 @@ public class BasketItemsController {
 
     @GetMapping("/add-form")
     public String addForm(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         BasketItems basketItems = new BasketItems();
 
         model.addAttribute("titleCRUD", titleCRUD);
@@ -87,6 +94,7 @@ public class BasketItemsController {
         @PathVariable(value = "id") Long id,
         Model model
     ){
+        addAttributeService.addFirstNameAttribute(model);
         BasketItems basketItems = basketItemsService.getBasketItemsById(id);
         String basketDateTime = converterService.dateToString(basketItems.getBasketDateTime(), "yyyy-MM-dd");
 

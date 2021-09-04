@@ -35,6 +35,9 @@
                     </div>
                     <div class="d-grid">
                       <h4 th:text="${message}"></h4>
+                      <div th:if="${param.error}">
+                        <div class="alert alert-danger">Invalid username or password.</div>
+                      </div>
                       <button class="btn btn-primary form-control btn-login text-uppercase fw-bold" type="submit">Sign in</button>
                     </div>
                     <hr class="my-3">

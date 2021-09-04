@@ -6,6 +6,7 @@ import java.util.Date;
 import com.simple.pos.simplepointofsale.Dto.CustomerAddressesDto;
 import com.simple.pos.simplepointofsale.model.CustomerAddresses;
 import com.simple.pos.simplepointofsale.service.CustomerAddressService;
+import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
 
 import org.slf4j.Logger;
@@ -38,8 +39,12 @@ public class CustomerAddressesController {
     @Autowired
     private ConverterService converterService;
 
+    @Autowired
+    AddAttributeService addAttributeService;
+
     @GetMapping("/list")
     public String viewCUstomerAddressMethodPage(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         model.addAttribute("updateFormLink", updateFormLink);
         model.addAttribute("listCustomerAddress", customerAddressService.getAllCustomersAddress());
         model.addAttribute("titleCRUD", titleCRUD);
@@ -50,6 +55,7 @@ public class CustomerAddressesController {
  
     @GetMapping("/add-form")
     public String addForm(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         CustomerAddresses customerAddresses = new CustomerAddresses();
 
         model.addAttribute("titleCRUD", titleCRUD);
@@ -85,6 +91,7 @@ public class CustomerAddressesController {
         @PathVariable Long id,
         Model model
     ){
+        addAttributeService.addFirstNameAttribute(model);
         CustomerAddresses customerAddresses = customerAddressService.getCustomerAddressById(id);
 
         String dateFrom = converterService.dateToString(customerAddresses.getDateFrom(), "yyyy-MM-dd");

@@ -3,6 +3,7 @@ package com.simple.pos.simplepointofsale.controller;
 import com.simple.pos.simplepointofsale.Dto.InventoryLocationsDto;
 import com.simple.pos.simplepointofsale.model.InventoryLocations;
 import com.simple.pos.simplepointofsale.service.InventoryLocationsService;
+import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +35,11 @@ public class InventoryLocationsController {
     private InventoryLocationsService inventoryLocationsService;
 
     @Autowired
-    private InventoryLocationsService inventoryLocationsService2;
+    AddAttributeService addAttributeService;
 
     @GetMapping("/list")
     public String viewInventoryLocationMethodPage(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         model.addAttribute("updateFormLink", updateFormLink);
         model.addAttribute("listInventoryLocations", inventoryLocationsService.getAllInventoryLocations());
         model.addAttribute("titleCRUD", titleCRUD);
@@ -49,6 +51,7 @@ public class InventoryLocationsController {
 
     @GetMapping("/add-form")
     public String addForm(Model model){
+        addAttributeService.addFirstNameAttribute(model);
         InventoryLocations inventoryLocations = new InventoryLocations();
 
         model.addAttribute("titleCRUD", titleCRUD);
@@ -84,6 +87,7 @@ public class InventoryLocationsController {
         @PathVariable(value = "id") Long id,
         Model model
     ){
+        addAttributeService.addFirstNameAttribute(model);
         InventoryLocations inventoryLocations = inventoryLocationsService.getInventoryLocationsById(id);
         
         InventoryLocationsDto inventoryLocationsDto = new InventoryLocationsDto(

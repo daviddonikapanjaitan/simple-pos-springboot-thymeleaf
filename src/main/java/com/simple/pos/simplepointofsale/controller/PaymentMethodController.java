@@ -103,17 +103,26 @@ public class PaymentMethodController {
 
     @PostMapping("/savePaymentMethod")
     public String createPaymentMethod(
-        @ModelAttribute("paymentMethod") PaymentMethodDto paymentMethodDto
+        @ModelAttribute("paymentMethod") PaymentMethodDto paymentMethodDto,
+        RedirectAttributes redirectAttributes
     ) throws ParseException{
+        String redirectLink = "redirect:/payment-method/list";
         
         logger.info("{}", paymentMethodDto.toString());
-        
-        paymentMethodService.savePaymentMethod(new PaymentMethod(
-            paymentMethodDto.getPaymentMethodCode(),
-            paymentMethodDto.getPaymentMethodDescription()
-        ));
+        paymentMethodDto.setPaymentMethodId(123L);
 
-        return "redirect:/payment-method/list";
+        if(!paymentMethodValidationService
+            .paymentMethodValidation(paymentMethodDto, redirectAttributes)){
+
+            paymentMethodService.savePaymentMethod(new PaymentMethod(
+                paymentMethodDto.getPaymentMethodCode(),
+                paymentMethodDto.getPaymentMethodDescription()
+            ));
+        }else{
+            redirectLink = "redirect:/payment-method/save-payment-method-form";
+        }
+
+        return redirectLink;
     }
 
     @GetMapping("/deletePaymentMethod/{id}")

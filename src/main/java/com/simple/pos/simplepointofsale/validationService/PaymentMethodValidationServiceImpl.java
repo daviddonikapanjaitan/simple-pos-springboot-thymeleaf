@@ -25,7 +25,7 @@ public class PaymentMethodValidationServiceImpl implements PaymentMethodValidati
         ){
             redirectAttributes.addFlashAttribute("message", "Field Must be contains");
         }else if(
-            paymentMethodDto.getPaymentMethodCode().length() < 5
+            paymentMethodDto.getPaymentMethodCode().length() < 2
         ){
             redirectAttributes.addFlashAttribute("message", "Field First name must length than 5");
         }else if(

@@ -13,9 +13,17 @@
                 <div class="container">
 
                     <form action="#" th:action="@{/saveCustomer}" th:object="${customer}" method="POST">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="exampleInputPassword1">Payment method code</label>
                             <input type="text" th:field="*{paymentMethodCode}" class="form-control">
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Payment method code</label>
+                            <select class="form-control" id="dropOperator" th:field="*{paymentMethodCode}">
+                                <option value="0">Select Payment Method</option>
+                                <option th:each="listPaymentMethod : ${listPaymentMethod}" th:value="${listPaymentMethod.paymentMethodCode}" th:text="${listPaymentMethod.paymentMethodCode + ' - ' + listPaymentMethod.paymentMethodDescription}"></option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -46,6 +54,10 @@
                         <div class="form-group">
                             <label for="exampleInputPassword1">Other Customer Details</label>
                             <input type="text" th:field="*{otherCustomerDetails}" class="form-control">
+                        </div>
+
+                        <div th:if="${message}">
+                            <div class="alert alert-danger" th:text="${message}"></div>
                         </div>
 
                         <button type="submit" class="btn btn-info"> Save Employee</button>

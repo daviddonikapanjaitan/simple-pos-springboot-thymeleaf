@@ -45,6 +45,9 @@
                         Remember password
                       </label>
                     </div> -->
+                    <div th:if="${message}">
+                      <div class="alert alert-danger" th:text="${message}"></div>
+                    </div>
                     <div class="d-grid">
                       <button class="btn btn-primary form-control btn-login text-uppercase fw-bold" type="submit">Register</button>
                     </div>

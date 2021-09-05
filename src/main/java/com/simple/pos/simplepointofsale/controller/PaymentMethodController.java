@@ -6,6 +6,7 @@ import com.simple.pos.simplepointofsale.Dto.PaymentMethodDto;
 import com.simple.pos.simplepointofsale.model.PaymentMethod;
 import com.simple.pos.simplepointofsale.service.PaymentMethodService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
+import com.simple.pos.simplepointofsale.validationService.PaymentMethodValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-  
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 @RequestMapping("/payment-method")
 public class PaymentMethodController {
@@ -29,6 +31,9 @@ public class PaymentMethodController {
 
     @Autowired
     AddAttributeService addAttributeService;
+
+    @Autowired
+    PaymentMethodValidationService paymentMethodValidationService;
 
     @GetMapping("/list")
     public String viewPaymentMethodPage(Model model){
@@ -71,20 +76,29 @@ public class PaymentMethodController {
     @PostMapping("/updatePaymentMethod/{id}")
     public String updatePaymentMethod(
         @PathVariable(value = "id") Long id,
-        @ModelAttribute("paymentMethod") PaymentMethodDto paymentMethodDto
+        @ModelAttribute("paymentMethod") PaymentMethodDto paymentMethodDto,
+        RedirectAttributes redirectAttributes
     ){
-        PaymentMethod paymentMethod = paymentMethodService.getPaymentMethodById(id);
+        String redirectLink = "redirect:/payment-method/list";
+
+        paymentMethodDto.setPaymentMethodId(id);
 
         PaymentMethod updatePaymentMethod = new PaymentMethod(
             paymentMethodDto.getPaymentMethodCode(),
-            paymentMethod.getPaymentMethodDescription()
+            paymentMethodDto.getPaymentMethodDescription()
         );
 
         updatePaymentMethod.setPaymentMethodId(id);
 
-        paymentMethodService.savePaymentMethod(updatePaymentMethod);
+        if(!paymentMethodValidationService.
+            paymentMethodValidation(paymentMethodDto, redirectAttributes)){
 
-        return "redirect:/payment-method/list";
+            paymentMethodService.savePaymentMethod(updatePaymentMethod);
+        }else{
+            redirectLink = "redirect:/payment-method/update-payment-method-form/" + id;
+        }
+
+        return redirectLink;
     }
 
     @PostMapping("/savePaymentMethod")

@@ -20,8 +20,8 @@ public class PaymentMethodValidationServiceImpl implements PaymentMethodValidati
             paymentMethodDto.getPaymentMethodCode() == null ||
             paymentMethodDto.getPaymentMethodDescription() == null || 
             paymentMethodDto.getPaymentMethodId().intValue() == 0 || 
-            paymentMethodDto.getPaymentMethodCode() == "" ||
-            paymentMethodDto.getPaymentMethodDescription() == "" 
+            paymentMethodDto.getPaymentMethodCode().equalsIgnoreCase("") ||
+            paymentMethodDto.getPaymentMethodDescription().equalsIgnoreCase("")
         ){
             redirectAttributes.addFlashAttribute("message", "Field Must be contains");
         }else if(

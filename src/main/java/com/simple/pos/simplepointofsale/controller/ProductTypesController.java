@@ -4,6 +4,7 @@ import com.simple.pos.simplepointofsale.Dto.ProductTypesDto;
 import com.simple.pos.simplepointofsale.model.ProductTypes;
 import com.simple.pos.simplepointofsale.service.ProductTypesService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
+import com.simple.pos.simplepointofsale.validationService.ProductTypesServiceValidation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-   
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 @RequestMapping("/product-types")
 public class ProductTypesController {
@@ -36,6 +38,9 @@ public class ProductTypesController {
 
     @Autowired
     AddAttributeService addAttributeService;
+
+    @Autowired
+    ProductTypesServiceValidation productTypesServiceValidation;
 
     @GetMapping("/list")
     public String viewProductTypesMethodPage(Model model){
@@ -65,18 +70,25 @@ public class ProductTypesController {
 
     @PostMapping("/save")
     public String save(
-        @ModelAttribute("productTypes") ProductTypesDto productTypesDto
+        @ModelAttribute("productTypes") ProductTypesDto productTypesDto,
+        RedirectAttributes redirectAttributes
     ){
+        String redirectLink = "redirect:/product-types/list";
         logger.info("{}", productTypesDto.toString());
 
-        productTypesService.saveProductTypes(
-            new ProductTypes(
-                productTypesDto.getProductTypeCode(),
-                productTypesDto.getProductTypeDescription()
-            )
-        );
+        if(!productTypesServiceValidation
+            .productTypesValidation(productTypesDto, redirectAttributes)){
+                productTypesService.saveProductTypes(
+                    new ProductTypes(
+                        productTypesDto.getProductTypeCode(),
+                        productTypesDto.getProductTypeDescription()
+                    )
+                );
+        }else{
+            redirectLink = "redirect:/product-types/add-form";
+        }
 
-        return "redirect:/product-types/list";
+        return redirectLink;
     }
 
     @GetMapping("/update-form/{id}")

@@ -4,6 +4,7 @@ import com.simple.pos.simplepointofsale.Dto.AddressesDto;
 import com.simple.pos.simplepointofsale.model.Addresses;
 import com.simple.pos.simplepointofsale.service.AddressesService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
+import com.simple.pos.simplepointofsale.validationService.AddressesValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-   
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+  
 @Controller
 @RequestMapping("/addresses")
 public class AddressesController {
@@ -34,6 +36,9 @@ public class AddressesController {
 
     @Autowired
     AddAttributeService addAttributeService;
+
+    @Autowired
+    AddressesValidationService addressesValidationService;
 
     @GetMapping("/list")
     public String viewAddressMethodPage(Model model){
@@ -62,23 +67,30 @@ public class AddressesController {
 
     @PostMapping("/save")
     public String save(
-        @ModelAttribute("addresses") AddressesDto addressesDto
+        @ModelAttribute("addresses") AddressesDto addressesDto,
+        RedirectAttributes redirectAttributes
     ){
+        String returnRedirect = "redirect:/addresses/list";
         logger.info("{}", addressesDto.toString());
 
-        addressesService.saveAddresses(new Addresses(
-            addressesDto.getLine1(),
-            addressesDto.getLine2(),
-            addressesDto.getLine3(),
-            addressesDto.getLine4(),
-            addressesDto.getCity(),
-            addressesDto.getZipPostcode(),
-            addressesDto.getStateProvinceCounty(),
-            addressesDto.getCountry(),
-            addressesDto.getOtherAddressDetails()
-        ));
+        if(!addressesValidationService
+            .addressesValidation(addressesDto, redirectAttributes)){
+                addressesService.saveAddresses(new Addresses(
+                    addressesDto.getLine1(),
+                    addressesDto.getLine2(),
+                    addressesDto.getLine3(),
+                    addressesDto.getLine4(),
+                    addressesDto.getCity(),
+                    addressesDto.getZipPostcode(),
+                    addressesDto.getStateProvinceCounty(),
+                    addressesDto.getCountry(),
+                    addressesDto.getOtherAddressDetails()
+                ));
+        }else{
+            returnRedirect = "redirect:/addresses/add-form";
+        }
 
-        return "redirect:/addresses/list";
+        return returnRedirect;
     }
 
     @GetMapping("/update-form/{id}")
@@ -113,8 +125,11 @@ public class AddressesController {
     @PostMapping("/update-form/{id}")
     public String updateAddress(
         @PathVariable(value = "id") Long id,
-        @ModelAttribute("addresses") AddressesDto addressesDto
+        @ModelAttribute("addresses") AddressesDto addressesDto,
+        RedirectAttributes redirectAttributes
     ){
+        String returnRedirect = "redirect:/addresses/list";
+
         Addresses addresses = new Addresses(
             addressesDto.getLine1(),
             addressesDto.getLine2(),
@@ -129,9 +144,14 @@ public class AddressesController {
 
         addresses.setAddressId(id);
 
-        addressesService.saveAddresses(addresses);
-
-        return "redirect:/addresses/list";
+        if(!addressesValidationService
+            .addressesValidation(addressesDto, redirectAttributes)){
+                addressesService.saveAddresses(addresses);
+        }else{
+            returnRedirect = "redirect:/addresses/update-form/" + id;
+        }
+        
+        return returnRedirect;
     }
 
     @GetMapping("/delete/{id}")

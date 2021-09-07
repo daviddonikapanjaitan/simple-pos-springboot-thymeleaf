@@ -3,7 +3,6 @@ package com.simple.pos.simplepointofsale.controller;
 import com.simple.pos.simplepointofsale.Dto.AddressTypesDto;
 import com.simple.pos.simplepointofsale.model.AddressTypes;
 import com.simple.pos.simplepointofsale.service.AddressTypesService;
-import com.simple.pos.simplepointofsale.service.AddressesService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 
 import org.slf4j.Logger;

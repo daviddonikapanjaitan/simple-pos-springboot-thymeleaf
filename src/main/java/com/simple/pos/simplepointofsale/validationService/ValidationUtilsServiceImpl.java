@@ -6,8 +6,12 @@ import java.util.regex.Pattern;
 
 import com.simple.pos.simplepointofsale.model.PaymentMethod;
 import com.simple.pos.simplepointofsale.model.ProductTypes;
+import com.simple.pos.simplepointofsale.model.Products;
+import com.simple.pos.simplepointofsale.model.Suppliers;
 import com.simple.pos.simplepointofsale.service.PaymentMethodService;
 import com.simple.pos.simplepointofsale.service.ProductTypesService;
+import com.simple.pos.simplepointofsale.service.ProductsService;
+import com.simple.pos.simplepointofsale.service.SuppliersService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,12 @@ public class ValidationUtilsServiceImpl implements ValidationUtilsService{
 
     @Autowired
     ProductTypesService productTypesService;
+
+    @Autowired
+    ProductsService productsService;
+
+    @Autowired
+    SuppliersService suppliersService;
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
@@ -55,6 +65,34 @@ public class ValidationUtilsServiceImpl implements ValidationUtilsService{
 
         for(ProductTypes productTypes : lProductTypes){
             if(productTypes.getProductTypeCode().equalsIgnoreCase(productTypesCode)){
+                returnResult = true;
+            }
+        }
+
+        return returnResult;
+    }
+
+    @Override
+    public boolean checkProductId(String productId) {
+        boolean returnResult = false;
+        List<Products> lProducts = productsService.getAllProduct();
+
+        for(Products products : lProducts){
+            if(products.getProducstId().toString().equalsIgnoreCase(productId)){
+                returnResult = true;
+            }
+        }
+
+        return returnResult;
+    }
+
+    @Override
+    public boolean checkSupplierCode(String supplierCode) {
+        boolean returnResult = false;
+        List<Suppliers> lSuppliers = suppliersService.getAllSuppliers();
+
+        for(Suppliers suppliers : lSuppliers){
+            if(suppliers.getSupplierCode().equalsIgnoreCase(supplierCode)){
                 returnResult = true;
             }
         }

@@ -1,12 +1,18 @@
 package com.simple.pos.simplepointofsale.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import com.simple.pos.simplepointofsale.Dto.ProductSuppliersDto;
 import com.simple.pos.simplepointofsale.model.ProductSuppliers;
+import com.simple.pos.simplepointofsale.model.Products;
+import com.simple.pos.simplepointofsale.model.Suppliers;
 import com.simple.pos.simplepointofsale.service.ProductSupplierService;
+import com.simple.pos.simplepointofsale.service.ProductsService;
+import com.simple.pos.simplepointofsale.service.SuppliersService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
+import com.simple.pos.simplepointofsale.validationService.ProductSuppliersValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  
 @Controller
 @RequestMapping("/product-supplier")
@@ -43,6 +50,15 @@ public class ProductSuppliersController {
     @Autowired
     AddAttributeService addAttributeService;
 
+    @Autowired
+    ProductSuppliersValidationService productSuppliersValidationService;
+
+    @Autowired
+    ProductsService productsService;
+
+    @Autowired
+    SuppliersService suppliersService;
+
     @GetMapping("/list")
     public String viewProductSupplierMethodPage(Model model){
         addAttributeService.addFirstNameAttribute(model);
@@ -60,6 +76,11 @@ public class ProductSuppliersController {
         addAttributeService.addFirstNameAttribute(model);
         ProductSuppliers productSuppliers = new ProductSuppliers();
 
+        List<Products> lProducts = productsService.getAllProduct();
+        List<Suppliers> lSuppliers = suppliersService.getAllSuppliers();
+
+        model.addAttribute("listProduct", lProducts);
+        model.addAttribute("listSuppliers", lSuppliers);
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("productSuppliers", productSuppliers);
         model.addAttribute("listLink", listLink);
@@ -71,32 +92,39 @@ public class ProductSuppliersController {
 
     @PostMapping("/save")
     public String save(
-        @ModelAttribute("productSupplier") ProductSuppliersDto productSuppliersDto
+        @ModelAttribute("productSupplier") ProductSuppliersDto productSuppliersDto,
+        RedirectAttributes redirectAttributes
     ){
+        String redirectLink = "redirect:/product-supplier/list";
         logger.info("{}", productSuppliersDto.toString());
 
         Date firstItemSuppliedDate = converterService.stringToDate(productSuppliersDto.getFirstItemSuppliedDate(), "yyyy-MM-dd");
         Date lastItemSuppliedDate = converterService.stringToDate(productSuppliersDto.getLastItemSuppliedDate(), "yyyy-MM-dd");
         Date deliveryLeadTime = converterService.stringToDate(productSuppliersDto.getDeliveryLeadTime(), "yyyy-MM-dd");
 
-        productSupplierService.saveProductSuppliers(
-            new ProductSuppliers(
-                productSuppliersDto.getProductId(),
-                productSuppliersDto.getSupplierCode(),
-                productSuppliersDto.getValueSuppliedToDate(),
-                productSuppliersDto.getTotalQuantitySuppliedToDate(),
-                firstItemSuppliedDate,
-                lastItemSuppliedDate,
-                deliveryLeadTime,
-                productSuppliersDto.getStandardPrice(),
-                productSuppliersDto.getPercentageDiscount(),
-                productSuppliersDto.getMinimumOrderQuantity(),
-                productSuppliersDto.getMaximumOrderQuantity(),
-                productSuppliersDto.getOtherItemSuppliersDetails()
-            )
-        );
+        if(!productSuppliersValidationService
+            .productSuppliersValidation(productSuppliersDto, redirectAttributes)){
+                productSupplierService.saveProductSuppliers(
+                    new ProductSuppliers(
+                        Long.parseLong(productSuppliersDto.getProductId()),
+                        productSuppliersDto.getSupplierCode(),
+                        Long.parseLong(productSuppliersDto.getValueSuppliedToDate()),
+                        Long.parseLong(productSuppliersDto.getTotalQuantitySuppliedToDate()),
+                        firstItemSuppliedDate,
+                        lastItemSuppliedDate,
+                        deliveryLeadTime,
+                        Long.parseLong(productSuppliersDto.getStandardPrice()),
+                        Long.parseLong(productSuppliersDto.getPercentageDiscount()),
+                        Long.parseLong(productSuppliersDto.getMinimumOrderQuantity()),
+                        Long.parseLong(productSuppliersDto.getMaximumOrderQuantity()),
+                        productSuppliersDto.getOtherItemSuppliersDetails()
+                    )
+                );
+        }else{
+            redirectLink = "redirect:/product-supplier/add-form";
+        }
 
-        return "redirect:/product-supplier/list";
+        return redirectLink;
     }
 
     @GetMapping("/update-form/{id}")
@@ -104,6 +132,9 @@ public class ProductSuppliersController {
         @PathVariable Long id,
         Model model
     ){
+        List<Products> lProducts = productsService.getAllProduct();
+        List<Suppliers> lSuppliers = suppliersService.getAllSuppliers();
+
         addAttributeService.addFirstNameAttribute(model);
         ProductSuppliers productSuppliers = productSupplierService.getProductSuppliersById(id);
         
@@ -112,20 +143,24 @@ public class ProductSuppliersController {
         String deliveryLeadTime = converterService.dateToString(productSuppliers.getDeliveryLeadTime(), "yyyy-MM-dd");
 
         ProductSuppliersDto productSuppliersDto = new ProductSuppliersDto(
-            productSuppliers.getProductId(),
+            productSuppliers.getProductId().toString(),
             productSuppliers.getSupplierCode(),
-            productSuppliers.getValueSuppliedToDate(),
-            productSuppliers.getTotalQuantitySuppliedToDate(),
+            productSuppliers.getValueSuppliedToDate().toString(),
+            productSuppliers.getTotalQuantitySuppliedToDate().toString(),
             firstItemSuppliedDate,
             lastItemSuppliedDate,
             deliveryLeadTime,
-            productSuppliers.getStandardPrice(),
-            productSuppliers.getPercentageDiscount(),
-            productSuppliers.getMinimumOrderQuantity(),
-            productSuppliers.getMaximumOrderQuantity(),
-            productSuppliers.getOtherItemSuppliersDetails()
+            productSuppliers.getStandardPrice().toString(),
+            productSuppliers.getPercentageDiscount().toString(),
+            productSuppliers.getMinimumOrderQuantity().toString(),
+            productSuppliers.getMaximumOrderQuantity().toString(),
+            productSuppliers.getOtherItemSuppliersDetails().toString()
         );
 
+        model.addAttribute("product_id", productSuppliers.getProductId());
+        model.addAttribute("supplier_code", productSuppliers.getSupplierCode());
+        model.addAttribute("listProducts", lProducts);
+        model.addAttribute("listSuppliers", lSuppliers);
         model.addAttribute("updateFormLink", updateFormLink + "/" + id);
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("listLink", listLink);
@@ -139,33 +174,42 @@ public class ProductSuppliersController {
     @PostMapping("/update-form/{id}")
     public String updateProductSupplier(
         @PathVariable(value = "id") Long id,
-        @ModelAttribute("productSupplier") ProductSuppliersDto productSuppliersDto
+        @ModelAttribute("productSupplier") ProductSuppliersDto productSuppliersDto,
+        RedirectAttributes redirectAttributes
     ){
+        logger.info("{}", productSuppliersDto.toString());
+
+        String redirectLink = "redirect:/product-supplier/list";
 
         Date firstItemSuppliedDate = converterService.stringToDate(productSuppliersDto.getFirstItemSuppliedDate(), "yyyy-MM-dd");
         Date lastItemSuppliedDate = converterService.stringToDate(productSuppliersDto.getLastItemSuppliedDate(), "yyyy-MM-dd");
         Date deliveryLeadTime = converterService.stringToDate(productSuppliersDto.getDeliveryLeadTime(), "yyyy-MM-dd");
 
-        ProductSuppliers productSuppliers = new ProductSuppliers(
-            productSuppliersDto.getProductId(),
-                productSuppliersDto.getSupplierCode(),
-                productSuppliersDto.getValueSuppliedToDate(),
-                productSuppliersDto.getTotalQuantitySuppliedToDate(),
-                firstItemSuppliedDate,
-                lastItemSuppliedDate,
-                deliveryLeadTime,
-                productSuppliersDto.getStandardPrice(),
-                productSuppliersDto.getPercentageDiscount(),
-                productSuppliersDto.getMinimumOrderQuantity(),
-                productSuppliersDto.getMaximumOrderQuantity(),
-                productSuppliersDto.getOtherItemSuppliersDetails()
-        );
-
-        productSuppliers.setProductSuppliersId(id);
-
-        productSupplierService.saveProductSuppliers(productSuppliers);
+        if(!productSuppliersValidationService
+            .productSuppliersValidation(productSuppliersDto, redirectAttributes)){
+                ProductSuppliers productSuppliers = new ProductSuppliers(
+                    Long.parseLong(productSuppliersDto.getProductId()),
+                    productSuppliersDto.getSupplierCode(),
+                    Long.parseLong(productSuppliersDto.getValueSuppliedToDate()),
+                    Long.parseLong(productSuppliersDto.getTotalQuantitySuppliedToDate()),
+                    firstItemSuppliedDate,
+                    lastItemSuppliedDate,
+                    deliveryLeadTime,
+                    Long.parseLong(productSuppliersDto.getStandardPrice()),
+                    Long.parseLong(productSuppliersDto.getPercentageDiscount()),
+                    Long.parseLong(productSuppliersDto.getMinimumOrderQuantity()),
+                    Long.parseLong(productSuppliersDto.getMaximumOrderQuantity()),
+                    productSuppliersDto.getOtherItemSuppliersDetails()
+                );
         
-        return "redirect:/product-supplier/list";
+                productSuppliers.setProductSuppliersId(id);
+        
+                productSupplierService.saveProductSuppliers(productSuppliers);
+        }else{
+            redirectLink = "redirect:/product-supplier/update-form/" + id;
+        }
+        
+        return redirectLink;
     }
 
     @GetMapping("/delete/{id}")

@@ -13,14 +13,32 @@
                 <div class="container">
 
                     <form action="#" th:action="@{/{postSaveLink}(postSaveLink=${postSaveLink})}" th:object="${productSuppliers}" method="POST">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="exampleInputPassword1">Product Id</label>
                             <input type="text" th:field="*{productId}" class="form-control">
+                        </div> -->
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Product Id</label>
+                            <select class="form-control" id="dropOperator" th:field="*{productId}">
+                                <option value="0">Select Payment Method</option>
+                                <option th:each="listProduct : ${listProduct}" 
+                                        th:value="${listProduct.productId}" 
+                                        th:text="${listProduct.productTypeCode + ' - ' + listProduct.productName}"></option>
+                            </select>
                         </div>
                         
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="exampleInputPassword1">Supplier Code</label>
                             <input type="text" th:field="*{supplierCode}" class="form-control">
+                        </div> -->
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Supplier Code</label>
+                            <select class="form-control" id="dropOperator" th:field="*{supplierCode}">
+                                <option value="0">Select Payment Method</option>
+                                <option th:each="listSuppliers : ${listSuppliers}" 
+                                        th:value="${listSuppliers.supplierCode}" 
+                                        th:text="${listSuppliers.supplierCode + ' - ' + listSuppliers.supplierName}"></option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -71,6 +89,10 @@
                         <div class="form-group">
                             <label for="exampleInputPassword1">Other Item Suppliers Details</label>
                             <textarea type="text" th:field="*{otherItemSuppliersDetails}" class="form-control" rows="5"></textarea>
+                        </div>
+                        
+                        <div th:if="${message}">
+                            <div class="alert alert-danger" th:text="${message}"></div>
                         </div>
 
                         <button th:text=" ${saveOrUpdate} + ' ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>

@@ -13,14 +13,40 @@
                 <div class="container">
 
                     <form action="#" th:action="@{/{updateFormLink}(updateFormLink=${updateFormLink})}" th:object="${productSuppliersDto}" method="POST">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="exampleInputPassword1">Product Id</label>
                             <input type="text" th:field="*{productId}" class="form-control">
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Product Id</label>
+                            <!-- th:field="*{paymentMethodCode}" -->
+                            <select class="form-control" id="dropOperator" name="productId">
+                                <option value="0">Select Payment Method</option>
+                                <option th:each="listProducts : ${listProducts}" 
+                                    th:value="${listProducts.productId}" 
+                                    th:text="${listProducts.productTypeCode + ' - ' + listProducts.productName}" 
+                                    th:selected="(${listProducts.productId} == ${product_id})" >
+                                </option>
+                            </select>
                         </div>
                         
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="exampleInputPassword1">Supplier Code</label>
                             <input type="text" th:field="*{supplierCode}" class="form-control">
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Supplier Code</label>
+                            <!-- th:field="*{paymentMethodCode}" -->
+                            <select class="form-control" id="dropOperator" name="supplierCode">
+                                <option value="0">Select Payment Method</option>
+                                <option th:each="listSuppliers : ${listSuppliers}" 
+                                    th:value="${listSuppliers.supplierCode}" 
+                                    th:text="${listSuppliers.supplierCode + ' - ' + listSuppliers.supplierName}" 
+                                    th:selected="(${listSuppliers.supplierCode} == ${supplier_code})" >
+                                </option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -71,6 +97,10 @@
                         <div class="form-group">
                             <label for="exampleInputPassword1">Other Item Suppliers Details</label>
                             <textarea type="text" th:field="*{otherItemSuppliersDetails}" class="form-control" rows="5"></textarea>
+                        </div>
+
+                        <div th:if="${message}">
+                            <div class="alert alert-danger" th:text="${message}"></div>
                         </div>
 
                         <button th:text=" ${saveOrUpdate} + ' ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>

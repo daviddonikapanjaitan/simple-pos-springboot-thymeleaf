@@ -2,27 +2,27 @@ package com.simple.pos.simplepointofsale.Dto;
 
 public class ProductSuppliersDto {
     
-    private Long productId;
+    private String productId;
     private String supplierCode;
-    private Long valueSuppliedToDate;
-    private Long totalQuantitySuppliedToDate;
+    private String valueSuppliedToDate;
+    private String totalQuantitySuppliedToDate;
     private String firstItemSuppliedDate;
     private String lastItemSuppliedDate;
     private String deliveryLeadTime;
-    private Long standardPrice;
-    private Long percentageDiscount;
-    private Long MinimumOrderQuantity;
-    private Long maximumOrderQuantity;
+    private String standardPrice;
+    private String percentageDiscount;
+    private String MinimumOrderQuantity;
+    private String maximumOrderQuantity;
     private String otherItemSuppliersDetails;
 
     public ProductSuppliersDto(){
 
     }
 
-    public ProductSuppliersDto(Long productId, String supplierCode, Long valueSuppliedToDate,
-            Long totalQuantitySuppliedToDate, String firstItemSuppliedDate, String lastItemSuppliedDate,
-            String deliveryLeadTime, Long standardPrice, Long percentageDiscount, Long minimumOrderQuantity,
-            Long maximumOrderQuantity, String otherItemSuppliersDetails) {
+    public ProductSuppliersDto(String productId, String supplierCode, String valueSuppliedToDate,
+            String totalQuantitySuppliedToDate, String firstItemSuppliedDate, String lastItemSuppliedDate,
+            String deliveryLeadTime, String standardPrice, String percentageDiscount, String minimumOrderQuantity,
+            String maximumOrderQuantity, String otherItemSuppliersDetails) {
         this.productId = productId;
         this.supplierCode = supplierCode;
         this.valueSuppliedToDate = valueSuppliedToDate;
@@ -37,11 +37,11 @@ public class ProductSuppliersDto {
         this.otherItemSuppliersDetails = otherItemSuppliersDetails;
     }
 
-    public Long getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
@@ -53,19 +53,19 @@ public class ProductSuppliersDto {
         this.supplierCode = supplierCode;
     }
 
-    public Long getValueSuppliedToDate() {
+    public String getValueSuppliedToDate() {
         return valueSuppliedToDate;
     }
 
-    public void setValueSuppliedToDate(Long valueSuppliedToDate) {
+    public void setValueSuppliedToDate(String valueSuppliedToDate) {
         this.valueSuppliedToDate = valueSuppliedToDate;
     }
 
-    public Long getTotalQuantitySuppliedToDate() {
+    public String getTotalQuantitySuppliedToDate() {
         return totalQuantitySuppliedToDate;
     }
 
-    public void setTotalQuantitySuppliedToDate(Long totalQuantitySuppliedToDate) {
+    public void setTotalQuantitySuppliedToDate(String totalQuantitySuppliedToDate) {
         this.totalQuantitySuppliedToDate = totalQuantitySuppliedToDate;
     }
 
@@ -93,35 +93,35 @@ public class ProductSuppliersDto {
         this.deliveryLeadTime = deliveryLeadTime;
     }
 
-    public Long getStandardPrice() {
+    public String getStandardPrice() {
         return standardPrice;
     }
 
-    public void setStandardPrice(Long standardPrice) {
+    public void setStandardPrice(String standardPrice) {
         this.standardPrice = standardPrice;
     }
 
-    public Long getPercentageDiscount() {
+    public String getPercentageDiscount() {
         return percentageDiscount;
     }
 
-    public void setPercentageDiscount(Long percentageDiscount) {
+    public void setPercentageDiscount(String percentageDiscount) {
         this.percentageDiscount = percentageDiscount;
     }
 
-    public Long getMinimumOrderQuantity() {
+    public String getMinimumOrderQuantity() {
         return MinimumOrderQuantity;
     }
 
-    public void setMinimumOrderQuantity(Long minimumOrderQuantity) {
+    public void setMinimumOrderQuantity(String minimumOrderQuantity) {
         MinimumOrderQuantity = minimumOrderQuantity;
     }
 
-    public Long getMaximumOrderQuantity() {
+    public String getMaximumOrderQuantity() {
         return maximumOrderQuantity;
     }
 
-    public void setMaximumOrderQuantity(Long maximumOrderQuantity) {
+    public void setMaximumOrderQuantity(String maximumOrderQuantity) {
         this.maximumOrderQuantity = maximumOrderQuantity;
     }
 

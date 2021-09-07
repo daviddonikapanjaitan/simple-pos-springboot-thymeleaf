@@ -38,6 +38,10 @@
                             <input type="text" th:field="*{productDescription}" class="form-control" rows="5"></input>
                         </div>
 
+                        <div th:if="${message}">
+                            <div class="alert alert-danger" th:text="${message}"></div>
+                        </div>
+
                         <button th:text=" ${saveOrUpdate} + ' ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>
                         <a th:href="@{/{link}(link=${listLink})}" th:text="'  Back to ' + ${titleCRUD} + ' List'" type="button" class="btn btn-info"></a>
                     </form>

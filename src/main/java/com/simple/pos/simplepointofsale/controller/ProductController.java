@@ -4,6 +4,7 @@ import com.simple.pos.simplepointofsale.Dto.ProductsDto;
 import com.simple.pos.simplepointofsale.model.Products;
 import com.simple.pos.simplepointofsale.service.ProductsService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
+import com.simple.pos.simplepointofsale.validationService.ProductsValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-  
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 @RequestMapping("/product")
 public class ProductController {
@@ -36,6 +38,9 @@ public class ProductController {
 
     @Autowired
     AddAttributeService addAttributeService;
+
+    @Autowired
+    ProductsValidationService productsValidationService;
 
     @GetMapping("/list")
     public String viewProductMethodPage(Model model){
@@ -65,19 +70,32 @@ public class ProductController {
 
     @PostMapping("/save")
     public String save(
-        @ModelAttribute("product") ProductsDto productsDto
-    ){
+        @ModelAttribute("product") ProductsDto productsDto,
+        RedirectAttributes redirectAttributes
+    ){ 
+        String redirectLink = "redirect:/product/list";
         logger.info("{}", productsDto.toString());
-    
-        productsService.saveProduct(new Products(
-            productsDto.getProductTypeCode(),
-            productsDto.getProductDetails(),
-            productsDto.getProductName(),
-            productsDto.getProductPrice(),
-            productsDto.getProductDescription()
-        ));
 
-        return "redirect:/product/list";
+        try{
+            if(!productsValidationService
+                .productsValidation(productsDto, redirectAttributes)){
+                    productsService.saveProduct(new Products(
+                        productsDto.getProductTypeCode(),
+                        productsDto.getProductDetails(),
+                        productsDto.getProductName(),
+                        Long.parseLong(productsDto.getProductPrice()),
+                        productsDto.getProductDescription()
+                    ));
+            }else{
+                redirectLink = "redirect:/product/add-form";
+            }
+        }catch(Exception e){
+            redirectLink = "redirect:/product/add-form";
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            return redirectLink; 
+        }
+
+        return redirectLink;
     }
 
     @GetMapping("/update-form/{id}")
@@ -92,7 +110,7 @@ public class ProductController {
             products.getProductTypeCode(),
             products.getProductDetails(),
             products.getProductName(),
-            products.getProductPrice(),
+            products.getProductPrice().toString(),
             products.getProductDescription()
         );
 
@@ -109,21 +127,29 @@ public class ProductController {
     @PostMapping("/update-form/{id}")
     public String updateProductForm(
         @PathVariable(value = "id") Long id,
-        @ModelAttribute("product") ProductsDto productsDto
+        @ModelAttribute("product") ProductsDto productsDto,
+        RedirectAttributes redirectAttributes
     ){
-        Products products = new Products(
-            productsDto.getProductTypeCode(),
-            productsDto.getProductDetails(),
-            productsDto.getProductName(),
-            productsDto.getProductPrice(),
-            productsDto.getProductDescription()
-        );
+        String redirectLink = "redirect:/product/list";
 
-        products.setProductId(id);
+        if(!productsValidationService
+            .productsValidation(productsDto, redirectAttributes)){
+                Products products = new Products(
+                    productsDto.getProductTypeCode(),
+                    productsDto.getProductDetails(),
+                    productsDto.getProductName(),
+                    Long.parseLong(productsDto.getProductPrice()),
+                    productsDto.getProductDescription()
+                );
+        
+                products.setProductId(id);
+        
+                productsService.saveProduct(products);
+        }else{
+            redirectLink = "redirect:/product/update-form/" + id;
+        }
 
-        productsService.saveProduct(products);
-
-        return "redirect:/product/list";
+        return redirectLink;
     }
 
     @GetMapping("/delete/{id}")

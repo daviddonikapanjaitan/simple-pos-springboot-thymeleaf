@@ -5,14 +5,14 @@ public class ProductsDto {
     private String productTypeCode;
     private String productDetails;
     private String productName;
-    private Long productPrice;
+    private String productPrice;
     private String productDescription;
 
     public ProductsDto(){
 
     }
 
-    public ProductsDto(String productTypeCode, String productDetails, String productName, Long productPrice,
+    public ProductsDto(String productTypeCode, String productDetails, String productName, String productPrice,
             String productDescription) {
         this.productTypeCode = productTypeCode;
         this.productDetails = productDetails;
@@ -45,11 +45,11 @@ public class ProductsDto {
         this.productName = productName;
     }
 
-    public Long getProductPrice() {
+    public String getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Long productPrice) {
+    public void setProductPrice(String productPrice) {
         this.productPrice = productPrice;
     }
 

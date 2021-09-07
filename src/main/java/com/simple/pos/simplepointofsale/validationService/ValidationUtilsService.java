@@ -5,4 +5,5 @@ public interface ValidationUtilsService {
     boolean validateEmail(String emailStr);
     boolean checkPaymentMethod(String paymentCode);
     boolean phoneValidation(String phone);
+    boolean checkProductTypes(String productTypes);
 }

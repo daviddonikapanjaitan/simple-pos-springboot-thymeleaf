@@ -5,7 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.simple.pos.simplepointofsale.model.PaymentMethod;
+import com.simple.pos.simplepointofsale.model.ProductTypes;
 import com.simple.pos.simplepointofsale.service.PaymentMethodService;
+import com.simple.pos.simplepointofsale.service.ProductTypesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ public class ValidationUtilsServiceImpl implements ValidationUtilsService{
 
     @Autowired
     PaymentMethodService paymentMethodService;
+
+    @Autowired
+    ProductTypesService productTypesService;
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
@@ -41,5 +46,19 @@ public class ValidationUtilsServiceImpl implements ValidationUtilsService{
     @Override
     public boolean phoneValidation(String phone) {
         return phone.matches("[0-9]+");
+    }
+
+    @Override
+    public boolean checkProductTypes(String productTypesCode) {
+        boolean returnResult = false;
+        List<ProductTypes> lProductTypes = productTypesService.getAllProductTypes();
+
+        for(ProductTypes productTypes : lProductTypes){
+            if(productTypes.getProductTypeCode().equalsIgnoreCase(productTypesCode)){
+                returnResult = true;
+            }
+        }
+
+        return returnResult;
     }
 }

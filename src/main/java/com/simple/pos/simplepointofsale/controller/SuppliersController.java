@@ -4,6 +4,7 @@ import com.simple.pos.simplepointofsale.Dto.SuppliersDto;
 import com.simple.pos.simplepointofsale.model.Suppliers;
 import com.simple.pos.simplepointofsale.service.SuppliersService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
+import com.simple.pos.simplepointofsale.validationService.SupplierValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller 
 @RequestMapping("/supplier")
@@ -36,6 +38,9 @@ public class SuppliersController {
 
     @Autowired
     AddAttributeService addAttributeService;
+
+    @Autowired
+    SupplierValidationService supplierValidationService;
 
     @GetMapping("/list")
     public String viewSupplierMethodPage(Model model){
@@ -64,20 +69,27 @@ public class SuppliersController {
 
     @PostMapping("/save")
     public String save(
-        @ModelAttribute("supplier") SuppliersDto suppliersDto
+        @ModelAttribute("supplier") SuppliersDto suppliersDto,
+        RedirectAttributes redirectAttributes
     ){
+        String redirectLink = "redirect:/supplier/list";
         logger.info("{}", suppliersDto.toString());
 
-        suppliersService.saveSuppliers(new Suppliers(
-            suppliersDto.getSupplierCode(),
-            suppliersDto.getSupplierName(),
-            suppliersDto.getSupplierAddress(),
-            suppliersDto.getSupplierEmail(),
-            suppliersDto.getSupplierPhone(),
-            suppliersDto.getOtherSupplierDetails()
-        ));
+        if(!supplierValidationService
+            .supplierValidation(suppliersDto, redirectAttributes)){
+                suppliersService.saveSuppliers(new Suppliers(
+                    suppliersDto.getSupplierCode(),
+                    suppliersDto.getSupplierName(),
+                    suppliersDto.getSupplierAddress(),
+                    suppliersDto.getSupplierEmail(),
+                    suppliersDto.getSupplierPhone(),
+                    suppliersDto.getOtherSupplierDetails()
+                ));
+        }else{
+            redirectLink = "redirect:/supplier/add-form";
+        }
 
-        return "redirect:/supplier/list";
+        return redirectLink;
     }
 
     @GetMapping("/update-form/{id}")
@@ -110,22 +122,29 @@ public class SuppliersController {
     @PostMapping("/update-form/{id}")
     public String updateSupplier(
         @PathVariable(value = "id") Long id,
-        @ModelAttribute("supplier") SuppliersDto suppliersDto
+        @ModelAttribute("supplier") SuppliersDto suppliersDto,
+        RedirectAttributes redirectAttributes
     ){
-        Suppliers suppliers = new Suppliers(
-            suppliersDto.getSupplierCode(),
-            suppliersDto.getSupplierName(),
-            suppliersDto.getSupplierAddress(),
-            suppliersDto.getSupplierEmail(),
-            suppliersDto.getSupplierPhone(),
-            suppliersDto.getOtherSupplierDetails()
-        );
+        String redirectLink = "redirect:/supplier/list";
 
-        suppliers.setSuppliersId(id);
+        if(!supplierValidationService
+            .supplierValidation(suppliersDto, redirectAttributes)){
+                Suppliers suppliers = new Suppliers(
+                    suppliersDto.getSupplierCode(),
+                    suppliersDto.getSupplierName(),
+                    suppliersDto.getSupplierAddress(),
+                    suppliersDto.getSupplierEmail(),
+                    suppliersDto.getSupplierPhone(),
+                    suppliersDto.getOtherSupplierDetails()
+                );
 
-        suppliersService.saveSuppliers(suppliers);
+                suppliers.setSuppliersId(id);
+                suppliersService.saveSuppliers(suppliers);
+        }else{
+            redirectLink = "redirect:/supplier/update-form/" + id;
+        }
 
-        return "redirect:/supplier/list";
+        return redirectLink;
     }
 
     @GetMapping("/delete/{id}")

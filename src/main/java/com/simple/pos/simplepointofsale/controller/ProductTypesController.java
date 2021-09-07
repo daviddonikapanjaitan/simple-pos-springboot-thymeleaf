@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+ 
 @Controller
 @RequestMapping("/product-types")
 public class ProductTypesController {
@@ -117,19 +117,26 @@ public class ProductTypesController {
     @PostMapping("/update-form/{id}")
     public String updateProductTypes(
         @PathVariable(value = "id") Long id,
-        @ModelAttribute("productTypes") ProductTypesDto productTypesDto
+        @ModelAttribute("productTypes") ProductTypesDto productTypesDto,
+        RedirectAttributes redirectAttributes
     ){
+        String redirectLink = "redirect:/product-types/list";
 
-        ProductTypes productTypes = new ProductTypes(
-            productTypesDto.getProductTypeCode(),
-            productTypesDto.getProductTypeDescription()
-        );
+        if(!productTypesServiceValidation
+            .productTypesValidation(productTypesDto, redirectAttributes)){
+                ProductTypes productTypes = new ProductTypes(
+                productTypesDto.getProductTypeCode(),
+                productTypesDto.getProductTypeDescription()
+            );
 
-        productTypes.setProductTypeId(id);
+            productTypes.setProductTypeId(id);
 
-        productTypesService.saveProductTypes(productTypes);
+            productTypesService.saveProductTypes(productTypes);
+        }else{
+            redirectLink = "redirect:/product-types/update-form/" + id;
+        }
 
-        return "redirect:/product-types/list";
+        return redirectLink;
     }
 
     @GetMapping("/delete/{id}")

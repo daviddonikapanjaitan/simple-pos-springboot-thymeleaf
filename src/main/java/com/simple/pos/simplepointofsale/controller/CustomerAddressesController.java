@@ -8,6 +8,7 @@ import com.simple.pos.simplepointofsale.model.CustomerAddresses;
 import com.simple.pos.simplepointofsale.service.CustomerAddressService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
+import com.simple.pos.simplepointofsale.validationService.CustomerAddressValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
   
 @Controller
 @RequestMapping("/customer-addresses")
@@ -41,6 +43,9 @@ public class CustomerAddressesController {
 
     @Autowired
     AddAttributeService addAttributeService;
+
+    @Autowired
+    CustomerAddressValidationService customerAddressValidationService;
 
     @GetMapping("/list")
     public String viewCUstomerAddressMethodPage(Model model){
@@ -68,22 +73,30 @@ public class CustomerAddressesController {
     
     @PostMapping("/save")
     public String save(
-        @ModelAttribute("customerAddresses") CustomerAddressesDto customerAddressesDto
+        @ModelAttribute("customerAddresses") CustomerAddressesDto customerAddressesDto,
+        RedirectAttributes redirectAttributes
     ){
+        String returnRedirect = "redirect:/customer-addresses/list";
         logger.info("{}", customerAddressesDto.toString());
 
         Date dateFrom = converterService.stringToDate(customerAddressesDto.getDateFrom(), "yyyy-MM-dd");
         Date dateTo = converterService.stringToDate(customerAddressesDto.getDateTo(), "yyyy-MM-dd");
 
-        customerAddressService.saveCustomerAddress(new CustomerAddresses(
-            customerAddressesDto.getCustomerId(),
-            customerAddressesDto.getAddressId(),
-            customerAddressesDto.getAddressTypeCode(),
-            dateFrom,
-            dateTo
-        ));
+        if(!customerAddressValidationService
+            .customerAddressValidation(
+                customerAddressesDto, redirectAttributes)){
+            customerAddressService.saveCustomerAddress(new CustomerAddresses(
+                Long.parseLong(customerAddressesDto.getCustomerId()),
+                Long.parseLong(customerAddressesDto.getAddressId()),
+                customerAddressesDto.getAddressTypeCode(),
+                dateFrom,
+                dateTo
+            ));
+        }else{
+            returnRedirect = "redirect:/customer-addresses/add-form";
+        }
 
-        return "redirect:/customer-addresses/list";
+        return returnRedirect;
     }
   
     @GetMapping("/update-form/{id}")
@@ -98,8 +111,8 @@ public class CustomerAddressesController {
         String dateTo = converterService.dateToString(customerAddresses.getDateTo(), "yyyy-MM-dd");
 
         CustomerAddressesDto customerAddressesDto = new CustomerAddressesDto(
-            customerAddresses.getCustomerId(),
-            customerAddresses.getAddressId(),
+            customerAddresses.getCustomerId().toString(),
+            customerAddresses.getAddressId().toString(),
             customerAddresses.getAddressTypeCode(),
             dateFrom,
             dateTo
@@ -124,8 +137,8 @@ public class CustomerAddressesController {
         Date dateTo = converterService.stringToDate(customerAddressesDto.getDateTo(), "yyyy-MM-dd");
 
         CustomerAddresses customerAddresses = new CustomerAddresses(
-            customerAddressesDto.getCustomerId(),
-            customerAddressesDto.getAddressId(),
+            Long.parseLong(customerAddressesDto.getCustomerId()),
+            Long.parseLong(customerAddressesDto.getAddressId()),
             customerAddressesDto.getAddressTypeCode(),
             dateFrom,
             dateTo

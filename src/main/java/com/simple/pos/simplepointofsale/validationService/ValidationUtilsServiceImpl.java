@@ -4,10 +4,16 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.simple.pos.simplepointofsale.model.AddressTypes;
+import com.simple.pos.simplepointofsale.model.Addresses;
+import com.simple.pos.simplepointofsale.model.Customer;
 import com.simple.pos.simplepointofsale.model.PaymentMethod;
 import com.simple.pos.simplepointofsale.model.ProductTypes;
 import com.simple.pos.simplepointofsale.model.Products;
 import com.simple.pos.simplepointofsale.model.Suppliers;
+import com.simple.pos.simplepointofsale.service.AddressTypesService;
+import com.simple.pos.simplepointofsale.service.AddressesService;
+import com.simple.pos.simplepointofsale.service.CustomerService;
 import com.simple.pos.simplepointofsale.service.PaymentMethodService;
 import com.simple.pos.simplepointofsale.service.ProductTypesService;
 import com.simple.pos.simplepointofsale.service.ProductsService;
@@ -30,6 +36,15 @@ public class ValidationUtilsServiceImpl implements ValidationUtilsService{
 
     @Autowired
     SuppliersService suppliersService;
+
+    @Autowired
+    CustomerService customerService;
+
+    @Autowired
+    AddressesService addressesService;
+
+    @Autowired
+    AddressTypesService addressTypesService;
 
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
@@ -99,4 +114,46 @@ public class ValidationUtilsServiceImpl implements ValidationUtilsService{
 
         return returnResult;
     }
+
+	@Override
+	public boolean checkCustomerId(Long customerId) {
+        boolean returnResult = false;
+        List<Customer> cList = customerService.getAllCustomers();
+
+        for(Customer customer : cList){
+            if(customer.getCustomerId() == customerId){
+                returnResult = true;
+            }
+        }
+
+		return returnResult;
+	}
+
+	@Override
+	public boolean checkAddressId(Long addressId) {
+        boolean returnResult = false;
+        List<Addresses> listAddress = addressesService.getAllAddresses();
+
+        for(Addresses addresses : listAddress){
+            if(addresses.getAddressId() == addressId){
+                returnResult = true;
+            }
+        }
+
+		return returnResult;
+	}
+
+	@Override
+	public boolean checkAddressTypeCode(String addressTypeCode) {
+        boolean returnResult = false;
+        List<AddressTypes> aList = addressTypesService.getAllAddressTypes();
+
+        for(AddressTypes addressTypes : aList){
+            if(addressTypes.getAddressTypeCode().equalsIgnoreCase(addressTypeCode)){
+                returnResult = true;
+            }
+        }
+
+		return returnResult;
+	}
 }

@@ -2,8 +2,8 @@ package com.simple.pos.simplepointofsale.Dto;
 
 public class CustomerAddressesDto {
 
-    private Long customerId;
-    private Long addressId;
+    private String customerId;
+    private String addressId;
     private String addressTypeCode;
     private String dateFrom;
     private String dateTo;
@@ -12,7 +12,7 @@ public class CustomerAddressesDto {
 
     }
 
-    public CustomerAddressesDto(Long customerId, Long addressId, String addressTypeCode,
+    public CustomerAddressesDto(String customerId, String addressId, String addressTypeCode,
         String dateFrom, String dateTo) {
         super();
         this.customerId = customerId;
@@ -22,19 +22,19 @@ public class CustomerAddressesDto {
         this.dateTo = dateTo;
     }
 
-    public Long getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
-    public Long getAddressId() {
+    public String getAddressId() {
         return addressId;
     }
 
-    public void setAddressId(Long addressId) {
+    public void setAddressId(String addressId) {
         this.addressId = addressId;
     }
 

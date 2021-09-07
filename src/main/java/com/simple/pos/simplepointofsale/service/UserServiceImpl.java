@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService{
         logger.info(userActivation.toString());
 
         if(userActivation == null){
-			throw new UsernameNotFoundException("System Error");
+			throw new UsernameNotFoundException("System Error[userActivation Null]");
 		}
 
         if(!userActivation.getActivation().equalsIgnoreCase("true")){

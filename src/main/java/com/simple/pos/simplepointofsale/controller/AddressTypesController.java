@@ -4,6 +4,7 @@ import com.simple.pos.simplepointofsale.Dto.AddressTypesDto;
 import com.simple.pos.simplepointofsale.model.AddressTypes;
 import com.simple.pos.simplepointofsale.service.AddressTypesService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
+import com.simple.pos.simplepointofsale.validationService.AddressTypesValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-   
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 @RequestMapping("/address-type")
 public class AddressTypesController {
@@ -34,6 +36,9 @@ public class AddressTypesController {
 
     @Autowired
     AddAttributeService addAttributeService;
+
+    @Autowired
+    AddressTypesValidationService addressTypesValidationService;
 
     @GetMapping("/list")
     public String viewAddressTypeMethodPage(Model model){
@@ -62,16 +67,23 @@ public class AddressTypesController {
 
     @PostMapping("/save")
     public String save(
-        @ModelAttribute("addressTypes") AddressTypesDto addressTypesDto
+        @ModelAttribute("addressTypes") AddressTypesDto addressTypesDto,
+        RedirectAttributes redirectAttributes
     ){
+        String redirectLink = "redirect:/address-type/list";
         logger.info("{}", addressTypesDto.toString());
 
-        addressTypesService.saveAddressTypes(new AddressTypes(
-            addressTypesDto.getAddressTypeCode(),
-            addressTypesDto.getAddressTypeDescription()
-        ));
+        if(!addressTypesValidationService
+            .addressTypesValidation(addressTypesDto, redirectAttributes)){
+                addressTypesService.saveAddressTypes(new AddressTypes(
+                    addressTypesDto.getAddressTypeCode(),
+                    addressTypesDto.getAddressTypeDescription()
+                ));
+        }else{
+            redirectLink = "redirect:/address-type/add-form";
+        }
 
-        return "redirect:/address-type/list";
+        return redirectLink;
     }
 
     @GetMapping("/update-form/{id}")
@@ -99,8 +111,11 @@ public class AddressTypesController {
     @PostMapping("/update-form/{id}")
     public String updateAddressTypes(
         @PathVariable(value = "id") Long id,
-        @ModelAttribute("addressTypes") AddressTypesDto addressTypesDto
+        @ModelAttribute("addressTypes") AddressTypesDto addressTypesDto,
+        RedirectAttributes redirectAttributes
     ){
+        String returnRedirect = "redirect:/address-type/list";
+
         AddressTypes addressTypes = new AddressTypes(
             addressTypesDto.getAddressTypeCode(),
             addressTypesDto.getAddressTypeDescription()
@@ -108,9 +123,15 @@ public class AddressTypesController {
 
         addressTypes.setAddressTypeId(id);
 
-        addressTypesService.saveAddressTypes(addressTypes);
+        if(!addressTypesValidationService
+            .addressTypesValidation(addressTypesDto, redirectAttributes)){
+                
+            addressTypesService.saveAddressTypes(addressTypes);
+        }else{
+            returnRedirect = "redirect:/address-type/update-form/" + id;
+        }
 
-        return "redirect:/address-type/list";
+        return returnRedirect;
     }
 
     @GetMapping("/delete/{id}")

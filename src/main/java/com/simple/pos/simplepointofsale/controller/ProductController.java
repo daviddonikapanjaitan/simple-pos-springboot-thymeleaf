@@ -1,7 +1,11 @@
 package com.simple.pos.simplepointofsale.controller;
 
+import java.util.List;
+
 import com.simple.pos.simplepointofsale.Dto.ProductsDto;
+import com.simple.pos.simplepointofsale.model.ProductTypes;
 import com.simple.pos.simplepointofsale.model.Products;
+import com.simple.pos.simplepointofsale.service.ProductTypesService;
 import com.simple.pos.simplepointofsale.service.ProductsService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.validationService.ProductsValidationService;
@@ -17,7 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+  
 @Controller
 @RequestMapping("/product")
 public class ProductController {
@@ -42,6 +46,9 @@ public class ProductController {
     @Autowired
     ProductsValidationService productsValidationService;
 
+    @Autowired
+    ProductTypesService productTypesService;
+
     @GetMapping("/list")
     public String viewProductMethodPage(Model model){
         addAttributeService.addFirstNameAttribute(model);
@@ -56,6 +63,8 @@ public class ProductController {
 
     @GetMapping("/add-form")
     public String addForm(Model model){
+        List<ProductTypes> lProductTypes = productTypesService.getAllProductTypes();
+
         addAttributeService.addFirstNameAttribute(model);
         Products products = new Products();
 
@@ -64,6 +73,7 @@ public class ProductController {
         model.addAttribute("listLink", listLink);
         model.addAttribute("postSaveLink", postSaveLink);
         model.addAttribute("saveOrUpdate", savePage);
+        model.addAttribute("listProductTypes", lProductTypes);
 
         return "product_ui/add_products";
     }
@@ -103,6 +113,8 @@ public class ProductController {
         @PathVariable(value = "id") Long id,
         Model model
     ){
+        List<ProductTypes> lProductTypes = productTypesService.getAllProductTypes();
+
         addAttributeService.addFirstNameAttribute(model);
         Products products = productsService.getProductById(id);
 
@@ -120,6 +132,8 @@ public class ProductController {
         model.addAttribute("productsDto", productsDto);
         model.addAttribute("productsId", products);
         model.addAttribute("saveOrUpdate", updatePage);
+        model.addAttribute("product_types_code", products.getProductTypeCode());
+        model.addAttribute("listProductTypes", lProductTypes);
     
         return "product_ui/update_products";
     }

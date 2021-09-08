@@ -13,14 +13,40 @@
                 <div class="container">
 
                     <form action="#" th:action="@{/{updateFormLink}(updateFormLink=${updateFormLink})}" th:object="${inventoryLocations}" method="POST">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="exampleInputPassword1">Product ID</label>
                             <input type="text" th:field="*{productId}" class="form-control" rows="5"></input>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Product ID</label>
+                            <!-- th:field="*{paymentMethodCode}" -->
+                            <select class="form-control" id="dropOperator" name="productId">
+                                <option value="0">Select Product ID</option>
+                                <option th:each="listProduct : ${listProduct}" 
+                                    th:value="${listProduct.productId}" 
+                                    th:text="${listProduct.productId + ' - ' + listProduct.productName}" 
+                                    th:selected="(${listProduct.productId} == ${product_id})" >
+                                </option>
+                            </select>
                         </div>
+
+                        <!-- <div class="form-group">
+                            <label for="exampleInputPassword1">Location Address ID</label>
+                            <input type="text" th:field="*{locationAddressId}" class="form-control" rows="5"></input>
+                        </div> -->
 
                         <div class="form-group">
                             <label for="exampleInputPassword1">Location Address ID</label>
-                            <input type="text" th:field="*{locationAddressId}" class="form-control" rows="5"></input>
+                            <!-- th:field="*{paymentMethodCode}" -->
+                            <select class="form-control" id="dropOperator" name="locationAddressId">
+                                <option value="0">Select Location Address ID</option>
+                                <option th:each="listAddresses : ${listAddresses}" 
+                                    th:value="${listAddresses.addressId}" 
+                                    th:text="${listAddresses.addressId + ' - ' + listAddresses.line1}" 
+                                    th:selected="(${listAddresses.addressId} == ${address_id})" >
+                                </option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -46,6 +72,10 @@
                         <div class="form-group">
                             <label for="exampleInputPassword1">Other Inventory Details</label>
                             <input type="text" th:field="*{otherInventoryDetails}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div th:if="${message}">
+                            <div class="alert alert-danger" th:text="${message}"></div>
                         </div>
 
                         <button th:text=" ${saveOrUpdate} + ' ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>

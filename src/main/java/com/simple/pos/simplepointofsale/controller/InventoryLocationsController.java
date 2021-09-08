@@ -2,8 +2,11 @@ package com.simple.pos.simplepointofsale.controller;
 
 import com.simple.pos.simplepointofsale.Dto.InventoryLocationsDto;
 import com.simple.pos.simplepointofsale.model.InventoryLocations;
+import com.simple.pos.simplepointofsale.service.AddressesService;
 import com.simple.pos.simplepointofsale.service.InventoryLocationsService;
+import com.simple.pos.simplepointofsale.service.ProductsService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
+import com.simple.pos.simplepointofsale.validationService.InventoryLocationsValidation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+ 
 @Controller
 @RequestMapping("/inventory-locations")
 public class InventoryLocationsController {
@@ -36,6 +40,15 @@ public class InventoryLocationsController {
 
     @Autowired
     AddAttributeService addAttributeService;
+
+    @Autowired
+    InventoryLocationsValidation inventoryLocationsValidation;
+
+    @Autowired
+    ProductsService productsService;
+
+    @Autowired
+    AddressesService addressesService;
 
     @GetMapping("/list")
     public String viewInventoryLocationMethodPage(Model model){
@@ -60,26 +73,37 @@ public class InventoryLocationsController {
         model.addAttribute("postSaveLink", postSaveLink);
         model.addAttribute("saveOrUpdate", savePage);
 
+        model.addAttribute("listProduct", productsService.getAllProduct());
+        model.addAttribute("listAddresses", addressesService.getAllAddresses());
+
         return "inventory_location_ui/add_inventory_location";
     }
 
     @PostMapping("/save")
     public String save(
-        @ModelAttribute("inventoryLocations") InventoryLocationsDto inventoryLocationsDto
+        @ModelAttribute("inventoryLocations") InventoryLocationsDto inventoryLocationsDto,
+        RedirectAttributes redirectAttributes
     ){
+        String returnRedirect = "redirect:/inventory-locations/list";
+
         logger.info("{}", inventoryLocationsDto.toString());
         
-        inventoryLocationsService.saveInventoryLocations(new InventoryLocations(
-            inventoryLocationsDto.getProductId(),
-            inventoryLocationsDto.getLocationAddressId(),
-            inventoryLocationsDto.getQuantityInStock(),
-            inventoryLocationsDto.getReorderLevel(),
-            inventoryLocationsDto.getReorderQuantity(),
-            inventoryLocationsDto.getTotalAverageMonthlyUsage(),
-            inventoryLocationsDto.getOtherInventoryDetails()
-        ));
+        if(!inventoryLocationsValidation
+            .inventoryLocationValidation(inventoryLocationsDto, redirectAttributes)){
+                inventoryLocationsService.saveInventoryLocations(new InventoryLocations(
+                    inventoryLocationsDto.getProductId(),
+                    inventoryLocationsDto.getLocationAddressId(),
+                    inventoryLocationsDto.getQuantityInStock(),
+                    inventoryLocationsDto.getReorderLevel(),
+                    inventoryLocationsDto.getReorderQuantity(),
+                    inventoryLocationsDto.getTotalAverageMonthlyUsage(),
+                    inventoryLocationsDto.getOtherInventoryDetails()
+                ));
+        }else{
+            returnRedirect = "redirect:/inventory-locations/add-form";
+        }
 
-        return "redirect:/inventory-locations/list";
+        return returnRedirect;
     }
 
     @GetMapping("/update-form/{id}")
@@ -107,14 +131,22 @@ public class InventoryLocationsController {
         model.addAttribute("inventoryLocations", inventoryLocations);
         model.addAttribute("saveOrUpdate", updatePage);
 
+        model.addAttribute("listProduct", productsService.getAllProduct());
+        model.addAttribute("listAddresses", addressesService.getAllAddresses());
+        model.addAttribute("product_id", inventoryLocations.getProductId());
+        model.addAttribute("address_id", inventoryLocations.getLocationAddressId());
+
         return "inventory_location_ui/update_inventory_location";
     }
 
     @PostMapping("/update-form/{id}")
     public String updateInventoryLocations(
         @PathVariable(value = "id") Long id,
-        @ModelAttribute("inventoryLocations") InventoryLocationsDto inventoryLocationsDto
+        @ModelAttribute("inventoryLocations") InventoryLocationsDto inventoryLocationsDto,
+        RedirectAttributes redirectAttributes
     ){
+        String returnRedirect = "redirect:/inventory-locations/list";
+
         InventoryLocations inventoryLocations = new InventoryLocations(
             inventoryLocationsDto.getProductId(),
             inventoryLocationsDto.getLocationAddressId(),
@@ -127,9 +159,14 @@ public class InventoryLocationsController {
 
         inventoryLocations.setInventoryLocationsId(id);
 
-        inventoryLocationsService.saveInventoryLocations(inventoryLocations);
+        if(!inventoryLocationsValidation
+            .inventoryLocationValidation(inventoryLocationsDto, redirectAttributes)){
+                inventoryLocationsService.saveInventoryLocations(inventoryLocations);
+        }else{
+            returnRedirect = "redirect:/inventory-locations/update-form/" + id;
+        }
     
-        return "redirect:/inventory-locations/list";
+        return returnRedirect;
     }
 
     @GetMapping("/delete/{id}")

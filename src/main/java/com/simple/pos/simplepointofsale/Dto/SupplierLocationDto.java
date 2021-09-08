@@ -3,7 +3,7 @@ package com.simple.pos.simplepointofsale.Dto;
 public class SupplierLocationDto{
 
     private String supplierCode;
-    private Long addressId;
+    private String addressId;
     private String dateFrom;
     private String dateTo;
     
@@ -11,7 +11,7 @@ public class SupplierLocationDto{
 
     }
     
-    public SupplierLocationDto(String supplierCode, Long addressId, String dateFrom, String dateTo) {
+    public SupplierLocationDto(String supplierCode, String addressId, String dateFrom, String dateTo) {
         super();
         this.supplierCode = supplierCode;
         this.addressId = addressId;
@@ -25,10 +25,10 @@ public class SupplierLocationDto{
     public void setSupplierCode(String supplierCode) {
         this.supplierCode = supplierCode;
     }
-    public Long getAddressId() {
+    public String getAddressId() {
         return addressId;
     }
-    public void setAddressId(Long addressId) {
+    public void setAddressId(String addressId) {
         this.addressId = addressId;
     }
     public String getDateFrom() {

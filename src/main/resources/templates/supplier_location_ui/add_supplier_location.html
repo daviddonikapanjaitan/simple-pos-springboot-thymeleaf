@@ -13,14 +13,30 @@
                 <div class="container">
 
                     <form action="#" th:action="@{/{postSaveLink}(postSaveLink=${postSaveLink})}" th:object="${supplierLocation}" method="POST">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="exampleInputPassword1">Supplier Code</label>
                             <input type="text" th:field="*{supplierCode}" class="form-control" rows="5"></input>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Supplier Code</label>
+                            <select class="form-control" id="dropOperator" th:field="*{supplierCode}">
+                                <option value="0">Select Supplier Code</option>
+                                <option th:each="listSuppliers : ${listSuppliers}" th:value="${listSuppliers.supplierCode}" th:text="${listSuppliers.supplierCode + ' - ' + listSuppliers.supplierName}"></option>
+                            </select>
                         </div>
+
+                        <!-- <div class="form-group">
+                            <label for="exampleInputPassword1">Address ID</label>
+                            <input type="text" th:field="*{addressId}" class="form-control" rows="5"></input>
+                        </div> -->
 
                         <div class="form-group">
                             <label for="exampleInputPassword1">Address ID</label>
-                            <input type="text" th:field="*{addressId}" class="form-control" rows="5"></input>
+                            <select class="form-control" id="dropOperator" th:field="*{addressId}">
+                                <option value="0">Select Address ID</option>
+                                <option th:each="listAddresses : ${listAddresses}" th:value="${listAddresses.addressId}" th:text="${listAddresses.addressId + ' - ' + listAddresses.line1}"></option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -31,6 +47,10 @@
                         <div class="form-group">
                             <label for="exampleInputPassword1">Date To</label>
                             <input type="date" th:field="*{dateTo}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div th:if="${message}">
+                            <div class="alert alert-danger" th:text="${message}"></div>
                         </div>
 
                         <button th:text=" ${saveOrUpdate} + ' ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>

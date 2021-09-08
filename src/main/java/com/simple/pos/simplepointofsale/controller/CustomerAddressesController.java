@@ -2,10 +2,17 @@ package com.simple.pos.simplepointofsale.controller;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 import com.simple.pos.simplepointofsale.Dto.CustomerAddressesDto;
+import com.simple.pos.simplepointofsale.model.AddressTypes;
+import com.simple.pos.simplepointofsale.model.Addresses;
+import com.simple.pos.simplepointofsale.model.Customer;
 import com.simple.pos.simplepointofsale.model.CustomerAddresses;
+import com.simple.pos.simplepointofsale.service.AddressTypesService;
+import com.simple.pos.simplepointofsale.service.AddressesService;
 import com.simple.pos.simplepointofsale.service.CustomerAddressService;
+import com.simple.pos.simplepointofsale.service.CustomerService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
 import com.simple.pos.simplepointofsale.validationService.CustomerAddressValidationService;
@@ -21,7 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-  
+ 
 @Controller
 @RequestMapping("/customer-addresses")
 public class CustomerAddressesController {
@@ -47,6 +54,15 @@ public class CustomerAddressesController {
     @Autowired
     CustomerAddressValidationService customerAddressValidationService;
 
+    @Autowired
+    CustomerService customerService;
+
+    @Autowired
+    AddressesService addressesService;
+
+    @Autowired
+    AddressTypesService addressTypesService;
+
     @GetMapping("/list")
     public String viewCUstomerAddressMethodPage(Model model){
         addAttributeService.addFirstNameAttribute(model);
@@ -60,9 +76,16 @@ public class CustomerAddressesController {
  
     @GetMapping("/add-form")
     public String addForm(Model model){
+        List<Customer> lCustomers = customerService.getAllCustomers();
+        List<Addresses> lAddresses = addressesService.getAllAddresses();
+        List<AddressTypes> lTypes = addressTypesService.getAllAddressTypes();
+
         addAttributeService.addFirstNameAttribute(model);
         CustomerAddresses customerAddresses = new CustomerAddresses();
 
+        model.addAttribute("listCustomers", lCustomers);
+        model.addAttribute("listAddress", lAddresses);
+        model.addAttribute("listAddressTypes", lTypes);
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("customerAddresses", customerAddresses);
         model.addAttribute("listLink", listLink);
@@ -104,6 +127,10 @@ public class CustomerAddressesController {
         @PathVariable Long id,
         Model model
     ){
+        List<Customer> lCustomers = customerService.getAllCustomers();
+        List<Addresses> lAddresses = addressesService.getAllAddresses();
+        List<AddressTypes> lTypes = addressTypesService.getAllAddressTypes();
+
         addAttributeService.addFirstNameAttribute(model);
         CustomerAddresses customerAddresses = customerAddressService.getCustomerAddressById(id);
 
@@ -118,6 +145,11 @@ public class CustomerAddressesController {
             dateTo
         );
 
+        model.addAttribute("address_id", customerAddresses.getAddressId());
+        model.addAttribute("customer_id", customerAddresses.getCustomerId());
+        model.addAttribute("listCustomers", lCustomers);
+        model.addAttribute("listAddress", lAddresses);
+        model.addAttribute("listAddressTypes", lTypes);
         model.addAttribute("updateFormLink", updateFormLink + '/' + id);
         model.addAttribute("listLink", listLink);
         model.addAttribute("titleCRUD", titleCRUD);

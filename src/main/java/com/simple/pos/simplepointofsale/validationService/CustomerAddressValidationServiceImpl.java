@@ -31,29 +31,29 @@ public class CustomerAddressValidationServiceImpl implements CustomerAddressVali
             customerAddresseDto.getDateFrom().equalsIgnoreCase("") || 
             customerAddresseDto.getDateTo().equalsIgnoreCase("")
         ){
-            redirectAttributes.addAttribute("message", "Field must be contains");
+            redirectAttributes.addFlashAttribute("message", "Field must be contains");
         }else if(
             !validationUtilsService
                 .phoneValidation(customerAddresseDto.getCustomerId())
         ){
-            redirectAttributes.addAttribute("message", "Invalid CustomerId");
+            redirectAttributes.addFlashAttribute("message", "Invalid CustomerId");
         }else if(
             !validationUtilsService
                 .phoneValidation(customerAddresseDto.getAddressId())
         ){
-            redirectAttributes.addAttribute("message", "Invalid Address ID");
+            redirectAttributes.addFlashAttribute("message", "Invalid Address ID");
         }else if(
             !validationUtilsService.checkCustomerId(Long.parseLong(customerAddresseDto.getCustomerId()))
         ){
-            redirectAttributes.addAttribute("message", "Invalid CustomerID");
+            redirectAttributes.addFlashAttribute("message", "Invalid CustomerID");
         }else if(
             !validationUtilsService.checkAddressId(Long.parseLong(customerAddresseDto.getAddressId()))
         ){
-            redirectAttributes.addAttribute("message", "Invalid AddressID");
+            redirectAttributes.addFlashAttribute("message", "Invalid AddressID");
         }else if(
             !validationUtilsService.checkAddressTypeCode(customerAddresseDto.getAddressTypeCode())
         ){
-            redirectAttributes.addAttribute("message", "Invalid Address Type Code");
+            redirectAttributes.addFlashAttribute("message", "Invalid Address Type Code");
         }else{
             returnResult = false;
         }

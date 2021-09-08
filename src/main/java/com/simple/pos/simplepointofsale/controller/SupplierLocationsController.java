@@ -4,9 +4,12 @@ import java.util.Date;
 
 import com.simple.pos.simplepointofsale.Dto.SupplierLocationDto;
 import com.simple.pos.simplepointofsale.model.SupplierLocation;
+import com.simple.pos.simplepointofsale.service.AddressesService;
 import com.simple.pos.simplepointofsale.service.SupplierLocationService;
+import com.simple.pos.simplepointofsale.service.SuppliersService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
+import com.simple.pos.simplepointofsale.validationService.SupplierLocationValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  
 @Controller
 @RequestMapping("/supplier-location")
@@ -43,6 +47,15 @@ public class SupplierLocationsController {
     @Autowired
     AddAttributeService addAttributeService;
 
+    @Autowired
+    SupplierLocationValidationService supplierLocationValidationService;
+
+    @Autowired
+    SuppliersService suppliersService;
+
+    @Autowired
+    AddressesService addressesService;
+
     @GetMapping("/list")
     public String viewSupplierLocationsMethodPage(Model model){
         addAttributeService.addFirstNameAttribute(model);
@@ -60,6 +73,8 @@ public class SupplierLocationsController {
         addAttributeService.addFirstNameAttribute(model);
         SupplierLocation supplierLocation = new SupplierLocation();
 
+        model.addAttribute("listSuppliers", suppliersService.getAllSuppliers());
+        model.addAttribute("listAddresses", addressesService.getAllAddresses());
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("supplierLocation", supplierLocation);
         model.addAttribute("listLink", listLink);
@@ -71,23 +86,32 @@ public class SupplierLocationsController {
 
     @PostMapping("/save")
     public String save(
-        @ModelAttribute("supplierLocation") SupplierLocationDto supplierLocationDto        
+        @ModelAttribute("supplierLocation") SupplierLocationDto supplierLocationDto,
+        RedirectAttributes redirectAttributes        
     ){
+        String returnRedirect = "redirect:/supplier-location/list";
         logger.info("{}", supplierLocationDto.toString());
     
         Date dateFrom = converterService.stringToDate(supplierLocationDto.getDateFrom(), "yyyy-MM-dd");
         Date dateTo = converterService.stringToDate(supplierLocationDto.getDateTo(), "yyyy-MM-dd");
 
-        supplierLocationService.saveSupplierLocations(
-            new SupplierLocation(
-                supplierLocationDto.getSupplierCode(),
-                supplierLocationDto.getAddressId(),
-                dateFrom,
-                dateTo
-            )
-        );
+        if(!supplierLocationValidationService.supplierLocationValidation(
+            supplierLocationDto, 
+            redirectAttributes)
+        ){
+            supplierLocationService.saveSupplierLocations(
+                new SupplierLocation(
+                    supplierLocationDto.getSupplierCode(),
+                    Long.parseLong(supplierLocationDto.getAddressId()),
+                    dateFrom,
+                    dateTo
+                )
+            );
+        }else{
+            returnRedirect = "redirect:/supplier-location/add-form";
+        }
 
-        return "redirect:/supplier-location/list";
+        return returnRedirect;
     }
 
     @GetMapping("/update-form/{id}")
@@ -103,11 +127,15 @@ public class SupplierLocationsController {
     
         SupplierLocationDto supplierLocationDto = new SupplierLocationDto(
             supplierLocation.getSupplierCode(),
-            supplierLocation.getAddressId(),
+            supplierLocation.getAddressId().toString(),
             dateFrom,
             dateTo
         );
 
+        model.addAttribute("address_id", supplierLocation.getAddressId());
+        model.addAttribute("supplier_code", supplierLocation.getSupplierCode());
+        model.addAttribute("listSuppliers", suppliersService.getAllSuppliers());
+        model.addAttribute("listAddresses", addressesService.getAllAddresses());
         model.addAttribute("updateFormLink", updateFormLink + "/" + id);
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("listLink", listLink);
@@ -121,24 +149,34 @@ public class SupplierLocationsController {
     @PostMapping("/update-form/{id}")
     public String updateSupplierLocation(
         @PathVariable(value = "id") Long id,
-        @ModelAttribute("supplierLocation")  SupplierLocationDto supplierLocationDto
+        @ModelAttribute("supplierLocation")  SupplierLocationDto supplierLocationDto,
+        RedirectAttributes redirectAttributes
     ){
+        String returnRedirect = "redirect:/supplier-location/list";
 
         Date dateFrom = converterService.stringToDate(supplierLocationDto.getDateFrom(), "yyyy-MM-dd");
         Date dateTo = converterService.stringToDate(supplierLocationDto.getDateTo(), "yyyy-MM-dd");
 
         SupplierLocation supplierLocation = new SupplierLocation(
             supplierLocationDto.getSupplierCode(),
-            supplierLocationDto.getAddressId(),
+            Long.parseLong(supplierLocationDto.getAddressId()),
             dateFrom,
             dateTo
         );
 
         supplierLocation.setSupplierLocationId(id);
 
-        supplierLocationService.saveSupplierLocations(supplierLocation);
+        if(
+            !supplierLocationValidationService.supplierLocationValidation(
+                supplierLocationDto, redirectAttributes
+            )
+        ){
+            supplierLocationService.saveSupplierLocations(supplierLocation);
+        }else{
+            returnRedirect = "redirect:/supplier-location/update-form/" + id;
+        }
 
-        return "redirect:/supplier-location/list";
+        return returnRedirect;
     }
 
     @GetMapping("/delete/{id}")

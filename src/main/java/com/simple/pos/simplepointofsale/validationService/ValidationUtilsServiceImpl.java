@@ -21,7 +21,7 @@ import com.simple.pos.simplepointofsale.service.SuppliersService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+ 
 @Service
 public class ValidationUtilsServiceImpl implements ValidationUtilsService{
 

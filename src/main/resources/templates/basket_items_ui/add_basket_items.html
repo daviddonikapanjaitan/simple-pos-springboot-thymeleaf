@@ -13,9 +13,17 @@
                 <div class="container">
 
                     <form action="#" th:action="@{/{postSaveLink}(postSaveLink=${postSaveLink})}" th:object="${basketItems}" method="POST">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="exampleInputPassword1">Customer ID</label>
                             <input type="text" th:field="*{customerId}" class="form-control">
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Customer ID</label>
+                            <select class="form-control" id="dropOperator" th:field="*{customerId}">
+                                <option value="0">Select Customer ID</option>
+                                <option th:each="listCustomer : ${listCustomer}" th:value="${listCustomer.customerId}" th:text="${listCustomer.customerId + ' - ' + listCustomer.customerName}"></option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -23,9 +31,17 @@
                             <input type="date" th:field="*{basketDateTime}" class="form-control" rows="5"></input>
                         </div>
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="exampleInputPassword1">Product ID</label>
                             <input type="text" th:field="*{productId}" class="form-control" rows="5"></input>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Product ID</label>
+                            <select class="form-control" id="dropOperator" th:field="*{productId}">
+                                <option value="0">Select Product ID</option>
+                                <option th:each="listProduct : ${listProduct}" th:value="${listProduct.productId}" th:text="${listProduct.productId + ' - ' + listProduct.productName}"></option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -36,6 +52,10 @@
                         <div class="form-group">
                             <label for="exampleInputPassword1">Cost</label>
                             <input type="text" th:field="*{cost}" class="form-control" rows="5"></input>
+                        </div>
+
+                        <div th:if="${message}">
+                            <div class="alert alert-danger" th:text="${message}"></div>
                         </div>
 
                         <button th:text="'Save ' + ${titleCRUD}" type="submit" class="btn btn-info"></button>

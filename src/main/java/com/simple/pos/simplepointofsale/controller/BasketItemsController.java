@@ -5,8 +5,11 @@ import java.util.Date;
 import com.simple.pos.simplepointofsale.Dto.BasketItemsDto;
 import com.simple.pos.simplepointofsale.model.BasketItems;
 import com.simple.pos.simplepointofsale.service.BasketItemsService;
+import com.simple.pos.simplepointofsale.service.CustomerService;
+import com.simple.pos.simplepointofsale.service.ProductsService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
+import com.simple.pos.simplepointofsale.validationService.BasketItemsValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/basket-items")
@@ -43,6 +47,15 @@ public class BasketItemsController {
     @Autowired
     AddAttributeService addAttributeService;
 
+    @Autowired
+    BasketItemsValidationService basketItemsValidationService;
+
+    @Autowired
+    CustomerService customerService;
+
+    @Autowired
+    ProductsService productsService;
+
     @GetMapping("/list")
     public String viewBasketItemsMethodPage(Model model){
         addAttributeService.addFirstNameAttribute(model);
@@ -61,6 +74,9 @@ public class BasketItemsController {
         addAttributeService.addFirstNameAttribute(model);
         BasketItems basketItems = new BasketItems();
 
+        model.addAttribute("listCustomer", customerService.getAllCustomers());
+        model.addAttribute("listProduct", productsService.getAllProduct());
+
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("basketItems", basketItems);
         model.addAttribute("listLink", listLink);
@@ -72,21 +88,28 @@ public class BasketItemsController {
 
     @PostMapping("/save")
     public String save(
-        @ModelAttribute("basketItems") BasketItemsDto basketItemsDto
+        @ModelAttribute("basketItems") BasketItemsDto basketItemsDto,
+        RedirectAttributes redirectAttributes
     ){
+        String returnRedirect = "redirect:/basket-items/list";
         logger.info("{}", basketItemsDto.toString());
     
         Date basketDateTime = converterService.stringToDate(basketItemsDto.getBasketDateTime(), "yyyy-MM-dd");
 
-        basketItemsService.saveBasketItems(new BasketItems(
-            basketItemsDto.getCustomerId(),
-            basketDateTime,
-            basketItemsDto.getProductId(),
-            basketItemsDto.getQuantity(),
-            basketItemsDto.getCost()
-        ));
+        if(!basketItemsValidationService
+            .basketItemsValidation(basketItemsDto, redirectAttributes)){
+            basketItemsService.saveBasketItems(new BasketItems(
+                basketItemsDto.getCustomerId(),
+                basketDateTime,
+                basketItemsDto.getProductId(),
+                basketItemsDto.getQuantity(),
+                basketItemsDto.getCost()
+            ));
+        }else{
+            returnRedirect = "redirect:/basket-items/add-form";
+        }
 
-        return "redirect:/basket-items/list";
+        return returnRedirect;
     }
 
     @GetMapping("/update-form/{id}")
@@ -106,6 +129,11 @@ public class BasketItemsController {
             basketItems.getCost()
         );
 
+        model.addAttribute("customer_id", basketItems.getCustomerId());
+        model.addAttribute("product_id", basketItems.getProductId());
+        model.addAttribute("listCustomer", customerService.getAllCustomers());
+        model.addAttribute("listProduct", productsService.getAllProduct());
+
         model.addAttribute("updateFormLink", updateFormLink + "/" + id);
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("listLink", listLink);
@@ -119,8 +147,10 @@ public class BasketItemsController {
     @PostMapping("/update-form/{id}")
     public String updateBasketItems(
         @PathVariable(value = "id") Long id,
-        @ModelAttribute("basketItems") BasketItemsDto basketItemsDto
+        @ModelAttribute("basketItems") BasketItemsDto basketItemsDto,
+        RedirectAttributes redirectAttributes
     ){
+        String returnRedirect = "redirect:/basket-items/list";
         Date basketDateTime = converterService.stringToDate(basketItemsDto.getBasketDateTime(), "yyyy-MM-dd");
 
         BasketItems basketItems = new BasketItems(
@@ -133,9 +163,14 @@ public class BasketItemsController {
 
         basketItems.setBasketItemsId(id);
 
-        basketItemsService.saveBasketItems(basketItems);
+        if(!basketItemsValidationService
+            .basketItemsValidation(basketItemsDto, redirectAttributes)){
+                basketItemsService.saveBasketItems(basketItems);
+        }else{
+            returnRedirect = "redirect:/basket-items/update-form/" + id;
+        }
 
-        return "redirect:/basket-items/list";
+        return returnRedirect;
     }
 
     @GetMapping("/delete/{id}")

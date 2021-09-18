@@ -16,4 +16,6 @@ public interface UserService extends UserDetailsService{
     boolean checkRole(String role);
 
     String getFirstName();
+
+    User findUserPerSession();
 }

@@ -1,5 +1,8 @@
 package com.simple.pos.simplepointofsale.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.simple.pos.simplepointofsale.Dto.ProductTypesDto;
 import com.simple.pos.simplepointofsale.model.ProductTypes;
 import com.simple.pos.simplepointofsale.service.ProductTypesService;
@@ -16,8 +19,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-  
+
 @Controller
 @RequestMapping("/product-types")
 public class ProductTypesController {
@@ -43,13 +47,40 @@ public class ProductTypesController {
     ProductTypesServiceValidation productTypesServiceValidation;
 
     @GetMapping("/list")
-    public String viewProductTypesMethodPage(Model model){
+    public String viewProductTypesMethodPage(
+        Model model,
+        @RequestParam(defaultValue =  "ascDesc") String ascDesc,
+        @RequestParam(defaultValue = "page") String page,
+        @RequestParam(defaultValue = "size") String size
+    ){
+        List<ProductTypes> lProductTypes = new ArrayList<>();
+
+        if(ascDesc.equalsIgnoreCase("asc")){
+            lProductTypes = productTypesService.getAllProductTypesAscDesc("asc");
+        }else if(ascDesc.equalsIgnoreCase("desc")){
+            lProductTypes = productTypesService.getAllProductTypesAscDesc("desc");
+        }else{
+            lProductTypes = productTypesService.getAllProductTypes();
+        }
+
+        int totalPage = 0;
+        if(lProductTypes.size() % 5 == 0){
+            totalPage = (lProductTypes.size() / 5);
+        }else{
+            totalPage = (lProductTypes.size() / 5) + 1;
+        }
+
+        logger.info("Product Size: " + lProductTypes.size());
+        logger.info("Page Size: " + totalPage);
+
         addAttributeService.addFirstNameAttribute(model);
         model.addAttribute("updateFormLink", updateFormLink);
-        model.addAttribute("listProductTypes", productTypesService.getAllProductTypes());
+        model.addAttribute("listProductTypes", lProductTypes);
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("saveFormLink", saveFormLink);
         model.addAttribute("deleteFormLink", deleteFormLink);
+        model.addAttribute("refresh", listLink);
+        model.addAttribute("totalPage", totalPage);
 
         return "product_types_ui/index";
     }

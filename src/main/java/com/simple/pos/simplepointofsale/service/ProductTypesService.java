@@ -10,4 +10,5 @@ public interface ProductTypesService {
     void saveProductTypes(ProductTypes productTypes);
     ProductTypes getProductTypesById(Long id);
     void deleteProductTypes(Long id);
+    List<ProductTypes> getAllProductTypesAscDesc(String ascDesc);
 }

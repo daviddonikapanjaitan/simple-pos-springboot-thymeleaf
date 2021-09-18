@@ -119,4 +119,14 @@ public class UserServiceImpl implements UserService{
 
         return user.getFirstName().split(" ")[0];
     }
+
+    @Override
+    public User findUserPerSession() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currenPrincipalName = authentication.getName();
+
+        User user = findByEmail(currenPrincipalName);
+
+        return user;
+    }
 }

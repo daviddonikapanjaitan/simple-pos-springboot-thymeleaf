@@ -20,11 +20,13 @@
                             Sorting & Pagination
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <span th:with="ascDesc=${param.ascDesc}"/>
+                            <span th:with="size=${param.size}"/>
                             <a class="dropdown-item" th:href="@{/{pathRefresh}(pathRefresh=${refresh})}">Refresh</a>
-                            <a class="dropdown-item" th:href="@{'/' + ${refresh} + '?ascDesc=asc'}">Sorting Product ASC</a>
-                            <a class="dropdown-item" th:href="@{'/' + ${refresh} + '?ascDesc=desc'}">Sorting Product DESC</a>
-                            <a class="dropdown-item" href="#">Pagination - 3</a>
-                            <a class="dropdown-item" href="#">Pagination - 5</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=asc' + '?size=' + ${size})}">Sorting Product ASC</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=desc' + '?size=' + ${size}}">Sorting Product DESC</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=desc' + '?size=3' + ${ascDesc}}">Pagination - 3</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=desc' +'?size=5' ${ascDesc}}">Pagination - 5</a>
                         </div>
                     </div>
                     <div class="col-3 ml-auto">

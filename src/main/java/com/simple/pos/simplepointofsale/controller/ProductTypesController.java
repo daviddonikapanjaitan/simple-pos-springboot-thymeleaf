@@ -12,6 +12,9 @@ import com.simple.pos.simplepointofsale.validationService.ProductTypesServiceVal
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+         
 @Controller
 @RequestMapping("/product-types")
 public class ProductTypesController {
@@ -52,22 +55,41 @@ public class ProductTypesController {
         @RequestParam(defaultValue =  "ascDesc") String ascDesc,
         @RequestParam(defaultValue = "page") String page,
         @RequestParam(defaultValue = "size") String size
-    ){
+    ) throws Exception{
         List<ProductTypes> lProductTypes = new ArrayList<>();
+        Pageable pageable = null;
+        Integer pageList = 0;
+        Integer sizeList = 0;
 
-        if(ascDesc.equalsIgnoreCase("asc")){
-            lProductTypes = productTypesService.getAllProductTypesAscDesc("asc");
-        }else if(ascDesc.equalsIgnoreCase("desc")){
-            lProductTypes = productTypesService.getAllProductTypesAscDesc("desc");
+        if(size.equalsIgnoreCase("size")){
+            sizeList = 5;
         }else{
-            lProductTypes = productTypesService.getAllProductTypes();
+            sizeList = Integer.parseInt(size);
         }
 
-        int totalPage = 0;
-        if(lProductTypes.size() % 5 == 0){
-            totalPage = (lProductTypes.size() / 5);
+        if(page.equalsIgnoreCase("page")){
+            pageList = 0;
         }else{
-            totalPage = (lProductTypes.size() / 5) + 1;
+            pageList = Integer.parseInt(page);
+        }
+
+        if(ascDesc.equalsIgnoreCase("asc")){
+            pageable = PageRequest.of(pageList, sizeList, Sort.by("productTypeCode").ascending());
+        }else if(ascDesc.equalsIgnoreCase("desc")){
+            pageable = PageRequest.of(pageList, sizeList, Sort.by("productTypeCode").descending());
+        }else{
+            pageable = PageRequest.of(pageList, sizeList);
+        }
+
+        lProductTypes = productTypesService.getAllProductTypesAscDesc(pageable);
+
+        int totalPage = 0;
+        int totalSize = productTypesService.getSize();
+        logger.info("Total Size: {}", totalSize);
+        if(totalSize % 5 == 0){
+            totalPage = (totalSize / sizeList);
+        }else{
+            totalPage = (totalSize / sizeList) + 1;
         }
 
         logger.info("Product Size: " + lProductTypes.size());

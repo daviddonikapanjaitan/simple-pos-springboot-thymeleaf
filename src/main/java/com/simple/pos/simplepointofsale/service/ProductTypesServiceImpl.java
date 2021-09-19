@@ -7,14 +7,16 @@ import java.util.Optional;
 import com.simple.pos.simplepointofsale.model.ProductTypes;
 import com.simple.pos.simplepointofsale.repository.ProductTypesRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductTypesServiceImpl implements ProductTypesService {
+
+    private static Logger logger = LoggerFactory.getLogger(ProductTypesServiceImpl.class);
 
     @Autowired
     ProductTypesRepository productTypesRepository;
@@ -48,15 +50,17 @@ public class ProductTypesServiceImpl implements ProductTypesService {
     }
 
     @Override
-    public List<ProductTypes> getAllProductTypesAscDesc(String ascDesc) {
+    public List<ProductTypes> getAllProductTypesAscDesc(Pageable pageable) {
         List<ProductTypes> lProductTypes = new ArrayList<>();
-        
-        if(ascDesc.equalsIgnoreCase("asc")){
-            lProductTypes = productTypesRepository.findAllByOrderByProductTypeCodeAsc();
-        }else if(ascDesc.equalsIgnoreCase("desc")){
-            lProductTypes = productTypesRepository.findAllByOrderByProductTypeCodeDesc();
-        }
+        logger.info("{}", lProductTypes.toString());
+
+        lProductTypes = productTypesRepository.findAll(pageable).getContent();
 
         return lProductTypes;
+    }
+
+    @Override
+    public int getSize() {
+        return productTypesRepository.findAll().size();
     }
 }

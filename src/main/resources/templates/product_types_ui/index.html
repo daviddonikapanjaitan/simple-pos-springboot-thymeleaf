@@ -20,18 +20,16 @@
                             Sorting & Pagination
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <span th:with="ascDesc=${param.ascDesc}"/>
-                            <span th:with="size=${param.size}"/>
                             <a class="dropdown-item" th:href="@{/{pathRefresh}(pathRefresh=${refresh})}">Refresh</a>
-                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=asc' + '?size=' + ${size})}">Sorting Product ASC</a>
-                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=desc' + '?size=' + ${size}}">Sorting Product DESC</a>
-                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=desc' + '?size=3' + ${ascDesc}}">Pagination - 3</a>
-                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=desc' +'?size=5' ${ascDesc}}">Pagination - 5</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=asc' + '&size=' + ${size} + '&page=' + ${page}}">Sorting Product ASC</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=desc' + '&size=' + ${size} + '&page=' + ${page}}">Sorting Product DESC</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=' + ${ascDesc} +  '&size=3' + '&page=' + ''}">Pagination - 3</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=' + ${ascDesc} + '&size=5' + '&page=' + ''}">Pagination - 5</a>
                         </div>
                     </div>
                     <div class="col-3 ml-auto">
-                        <form class="d-flex">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <form class="d-flex" action="#" th:action="@{/{pathRefresh}(pathRefresh=${refresh})}" method="GET">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" th:name="filtering" th:value="${filtering}">
                             &nbsp;
                             <button class="btn btn-outline-success" type="submit">Search</button>
                         </form>
@@ -70,7 +68,9 @@
                         <ul class="pagination">
                             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
                             <span th:each="star:${#numbers.sequence(1, totalPage)}">
-                                <li class="page-item"><a class="page-link" href="#" th:text="${star}"></a></li>
+                                <li class="page-item"><a class="page-link" href="#" 
+                                    th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=asc' + '&size=' + ${size} + '&page=' + ${star}}"
+                                    th:text="${star}"></a></li>
                             </span> 
                             <li class="page-item"><a class="page-link" href="#">Next</a></li>
                         </ul>

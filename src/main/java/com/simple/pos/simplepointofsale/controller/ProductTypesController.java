@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-         
+
 @Controller
 @RequestMapping("/product-types")
 public class ProductTypesController {
@@ -54,23 +54,30 @@ public class ProductTypesController {
         Model model,
         @RequestParam(defaultValue =  "ascDesc") String ascDesc,
         @RequestParam(defaultValue = "page") String page,
-        @RequestParam(defaultValue = "size") String size
+        @RequestParam(defaultValue = "size") String size,
+        @RequestParam(defaultValue = "filtering") String filtering
     ) throws Exception{
         List<ProductTypes> lProductTypes = new ArrayList<>();
         Pageable pageable = null;
         Integer pageList = 0;
         Integer sizeList = 0;
 
+        logger.info("size = {}", size);
+        logger.info("page = {}", page);
+        logger.info("ascDesc = {}", ascDesc);
+        logger.info("filtering = {}", filtering);
         if(size.equalsIgnoreCase("size")){
             sizeList = 5;
+            size = "";
         }else{
             sizeList = Integer.parseInt(size);
         }
 
         if(page.equalsIgnoreCase("page")){
             pageList = 0;
+            page = "";
         }else{
-            pageList = Integer.parseInt(page);
+            pageList = Integer.parseInt(page) - 1;
         }
 
         if(ascDesc.equalsIgnoreCase("asc")){
@@ -78,15 +85,28 @@ public class ProductTypesController {
         }else if(ascDesc.equalsIgnoreCase("desc")){
             pageable = PageRequest.of(pageList, sizeList, Sort.by("productTypeCode").descending());
         }else{
+            ascDesc = "";
             pageable = PageRequest.of(pageList, sizeList);
         }
 
         lProductTypes = productTypesService.getAllProductTypesAscDesc(pageable);
+        List<ProductTypes> lProductTypesFiltering = new ArrayList<>();
+
+        if(!filtering.equalsIgnoreCase("filtering")){
+            for(ProductTypes productTypes: lProductTypes){
+                if(productTypes.getProductTypeCode().contains(filtering)){
+                    lProductTypesFiltering.add(productTypes);
+                }
+            }
+            lProductTypes = lProductTypesFiltering;
+        }else{
+            filtering = "";
+        }
 
         int totalPage = 0;
         int totalSize = productTypesService.getSize();
         logger.info("Total Size: {}", totalSize);
-        if(totalSize % 5 == 0){
+        if(totalSize % sizeList == 0){
             totalPage = (totalSize / sizeList);
         }else{
             totalPage = (totalSize / sizeList) + 1;
@@ -103,6 +123,10 @@ public class ProductTypesController {
         model.addAttribute("deleteFormLink", deleteFormLink);
         model.addAttribute("refresh", listLink);
         model.addAttribute("totalPage", totalPage);
+        model.addAttribute("ascDesc", ascDesc);
+        model.addAttribute("size", size);
+        model.addAttribute("page", page);
+        model.addAttribute("filtering", filtering);
 
         return "product_types_ui/index";
     }

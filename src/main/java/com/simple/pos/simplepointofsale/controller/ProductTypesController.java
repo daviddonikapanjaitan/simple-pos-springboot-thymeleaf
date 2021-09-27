@@ -3,10 +3,13 @@ package com.simple.pos.simplepointofsale.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simple.pos.simplepointofsale.Dto.PaginationDto;
+import com.simple.pos.simplepointofsale.Dto.PaginationRequestDto;
 import com.simple.pos.simplepointofsale.Dto.ProductTypesDto;
 import com.simple.pos.simplepointofsale.model.ProductTypes;
 import com.simple.pos.simplepointofsale.service.ProductTypesService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
+import com.simple.pos.simplepointofsale.utils.PaginationService;
 import com.simple.pos.simplepointofsale.validationService.ProductTypesServiceValidation;
 
 import org.slf4j.Logger;
@@ -49,6 +52,9 @@ public class ProductTypesController {
     @Autowired
     ProductTypesServiceValidation productTypesServiceValidation;
 
+    @Autowired
+    PaginationService paginationService;
+
     @GetMapping("/list")
     public String viewProductTypesMethodPage(
         Model model,
@@ -57,39 +63,22 @@ public class ProductTypesController {
         @RequestParam(defaultValue = "size") String size,
         @RequestParam(defaultValue = "filtering") String filtering
     ) throws Exception{
+        PaginationRequestDto paginationRequestDto = new PaginationRequestDto(
+            ascDesc,
+            page,
+            size,
+            filtering,
+            productTypesService.getSize()
+        );
+        PaginationDto paginationDto = paginationService
+            .paginationService(paginationRequestDto);
+
+        Pageable pageable = paginationDto.getPageable();
+        Integer pageList = paginationDto.getPageList();
+        Integer nextPageList = paginationDto.getNextPageList();
+        Integer totalPage = paginationDto.getTotalPage();
+
         List<ProductTypes> lProductTypes = new ArrayList<>();
-        Pageable pageable = null;
-        Integer pageList = 0;
-        Integer sizeList = 0;
-        Integer nextPageList = 0;
-
-        logger.info("size = {}", size);
-        logger.info("page = {}", page);
-        logger.info("ascDesc = {}", ascDesc);
-        logger.info("filtering = {}", filtering);
-        if(size.equalsIgnoreCase("size")){
-            sizeList = 5;
-            size = "";
-        }else{
-            sizeList = Integer.parseInt(size);
-        }
-
-        if(page.equalsIgnoreCase("page")){
-            pageList = 0;
-            page = "";
-        }else{
-            pageList = Integer.parseInt(page) - 1;
-        }
-
-        if(ascDesc.equalsIgnoreCase("asc")){
-            pageable = PageRequest.of(pageList, sizeList, Sort.by("productTypeCode").ascending());
-        }else if(ascDesc.equalsIgnoreCase("desc")){
-            pageable = PageRequest.of(pageList, sizeList, Sort.by("productTypeCode").descending());
-        }else{
-            ascDesc = "";
-            pageable = PageRequest.of(pageList, sizeList);
-        }
-
         lProductTypes = productTypesService.getAllProductTypesAscDesc(pageable);
         List<ProductTypes> lProductTypesFiltering = new ArrayList<>();
 
@@ -103,23 +92,6 @@ public class ProductTypesController {
         }else{
             filtering = "";
         }
-
-        int totalPage = 0;
-        int totalSize = productTypesService.getSize();
-        logger.info("Total Size: {}", totalSize);
-        if(totalSize % sizeList == 0){
-            totalPage = (totalSize / sizeList);
-        }else{
-            totalPage = (totalSize / sizeList) + 1;
-        }
-
-        nextPageList = pageList + 2;
-
-        logger.info("Product Size: " + lProductTypes.size());
-        logger.info("Page: " + page);
-        logger.info("Page List: " + pageList);
-        logger.info("Page Size: " + totalPage);
-        logger.info("Next Page List: " + nextPageList);
 
         addAttributeService.addFirstNameAttribute(model);
         model.addAttribute("updateFormLink", updateFormLink);

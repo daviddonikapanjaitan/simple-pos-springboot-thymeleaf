@@ -61,6 +61,7 @@ public class ProductTypesController {
         Pageable pageable = null;
         Integer pageList = 0;
         Integer sizeList = 0;
+        Integer nextPageList = 0;
 
         logger.info("size = {}", size);
         logger.info("page = {}", page);
@@ -112,8 +113,13 @@ public class ProductTypesController {
             totalPage = (totalSize / sizeList) + 1;
         }
 
+        nextPageList = pageList + 2;
+
         logger.info("Product Size: " + lProductTypes.size());
+        logger.info("Page: " + page);
+        logger.info("Page List: " + pageList);
         logger.info("Page Size: " + totalPage);
+        logger.info("Next Page List: " + nextPageList);
 
         addAttributeService.addFirstNameAttribute(model);
         model.addAttribute("updateFormLink", updateFormLink);
@@ -127,6 +133,8 @@ public class ProductTypesController {
         model.addAttribute("size", size);
         model.addAttribute("page", page);
         model.addAttribute("filtering", filtering);
+        model.addAttribute("pageList", pageList);
+        model.addAttribute("nextPageList", nextPageList);
 
         return "product_types_ui/index";
     }

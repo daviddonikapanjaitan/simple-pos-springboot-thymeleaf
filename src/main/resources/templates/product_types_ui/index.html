@@ -64,7 +64,7 @@
                     <!-- <span class="fa fa-star-o" th:each="star:${#numbers.sequence(0,3)}">
                         <td>a</td>
                     </span>  -->
-                    <nav aria-label="Page navigation example">
+                    <nav aria-label="Page navigation example" th:if="${not #lists.isEmpty(listProductTypes)}">
                         <ul class="pagination">
                             <li class="page-item" th:if="(${pageList} != 0)"><a class="page-link" 
                                 th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=asc' + '&size=' + ${size} + '&page=' + ${pageList}}"

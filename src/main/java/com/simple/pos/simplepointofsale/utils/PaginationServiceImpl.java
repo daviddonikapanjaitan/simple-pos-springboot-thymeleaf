@@ -30,6 +30,7 @@ public class PaginationServiceImpl implements PaginationService{
         String size = paginationRequestDto.getSize();
         String filtering = paginationRequestDto.getFiltering();
         Integer totalSize = paginationRequestDto.getTotalSize();
+        String sortBy = paginationRequestDto.getSortBy();
 
         logger.info("size = {}", size);
         logger.info("page = {}", page);
@@ -51,9 +52,9 @@ public class PaginationServiceImpl implements PaginationService{
         }
 
         if(ascDesc.equalsIgnoreCase("asc")){
-            pageable = PageRequest.of(pageList, sizeList, Sort.by("productTypeCode").ascending());
+            pageable = PageRequest.of(pageList, sizeList, Sort.by(sortBy).ascending());
         }else if(ascDesc.equalsIgnoreCase("desc")){
-            pageable = PageRequest.of(pageList, sizeList, Sort.by("productTypeCode").descending());
+            pageable = PageRequest.of(pageList, sizeList, Sort.by(sortBy).descending());
         }else{
             ascDesc = "";
             pageable = PageRequest.of(pageList, sizeList);

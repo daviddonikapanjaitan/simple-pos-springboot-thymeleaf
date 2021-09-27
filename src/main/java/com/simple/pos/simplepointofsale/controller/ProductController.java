@@ -70,7 +70,8 @@ public class ProductController {
             page,
             size,
             filtering,
-            productsService.getSize()
+            productsService.getSize(),
+            "productTypeCode"
         );
         PaginationDto paginationDto = paginationService
             .paginationService(paginationRequestDto);

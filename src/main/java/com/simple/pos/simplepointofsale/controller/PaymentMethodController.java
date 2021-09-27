@@ -1,16 +1,22 @@
 package com.simple.pos.simplepointofsale.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.simple.pos.simplepointofsale.Dto.PaginationDto;
+import com.simple.pos.simplepointofsale.Dto.PaginationRequestDto;
 import com.simple.pos.simplepointofsale.Dto.PaymentMethodDto;
 import com.simple.pos.simplepointofsale.model.PaymentMethod;
 import com.simple.pos.simplepointofsale.service.PaymentMethodService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
+import com.simple.pos.simplepointofsale.utils.PaginationService;
 import com.simple.pos.simplepointofsale.validationService.PaymentMethodValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -25,6 +32,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PaymentMethodController {
     
     private static Logger logger = LoggerFactory.getLogger(CustomerController.class);
+
+    private static String listLink = "payment-method/list";
 
     @Autowired
     private PaymentMethodService paymentMethodService;
@@ -35,10 +44,58 @@ public class PaymentMethodController {
     @Autowired
     PaymentMethodValidationService paymentMethodValidationService;
 
+    @Autowired
+    PaginationService paginationService;
+
     @GetMapping("/list")
-    public String viewPaymentMethodPage(Model model){
+    public String viewPaymentMethodPage(Model model,
+        @RequestParam(defaultValue = "ascDesc") String ascDesc,
+        @RequestParam(defaultValue = "page") String page,
+        @RequestParam(defaultValue = "size") String size,
+        @RequestParam(defaultValue = "filtering") String filtering
+    ){
+        PaginationRequestDto paginationRequestDto = new PaginationRequestDto(
+            ascDesc,
+            page,
+            size,
+            filtering,
+            paymentMethodService.getSize(),
+            "paymentMethodCode"
+        );
+        PaginationDto paginationDto = paginationService
+            .paginationService(paginationRequestDto);
+            
+        Pageable pageable = paginationDto.getPageable();
+        Integer pageList = paginationDto.getPageList();
+        Integer nextPageList = paginationDto.getNextPageList();
+        Integer totalPage = paginationDto.getTotalPage();
+
+        List<PaymentMethod> lPaymentMethods = new ArrayList<>();
+        lPaymentMethods = paymentMethodService.getAllPaymentMethodAscDesc(pageable);
+        List<PaymentMethod> lPaymentMethodFiltering = new ArrayList<>();
+
+        if(!filtering.equalsIgnoreCase("filtering")){
+            for(PaymentMethod paymentMethod: lPaymentMethods){
+                if(paymentMethod.getPaymentMethodCode().contains(filtering)){
+                    lPaymentMethodFiltering.add(paymentMethod);
+                }
+            }
+            lPaymentMethods = lPaymentMethodFiltering;
+        }else{
+            filtering = "";
+        }
+
         addAttributeService.addFirstNameAttribute(model);
-        model.addAttribute("listPaymentMethod", paymentMethodService.getAllPaymentMethod());
+        model.addAttribute("listPaymentMethod", lPaymentMethods);
+        model.addAttribute("refresh", listLink);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("ascDesc", ascDesc);
+        model.addAttribute("size", size);
+        model.addAttribute("page", page);
+        model.addAttribute("filtering", filtering);
+        model.addAttribute("pageList", pageList);
+        model.addAttribute("nextPageList", nextPageList);
+
         return "paymentmethod_ui/index";
     }
 

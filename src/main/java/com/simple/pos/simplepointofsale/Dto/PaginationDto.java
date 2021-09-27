@@ -43,6 +43,11 @@ public class PaginationDto{
     public PaginationDto(){
 
     }
+    @Override
+    public String toString() {
+        return "PaginationDto [nextPageList=" + nextPageList + ", pageList=" + pageList + ", pageable=" + pageable
+                + ", sizeList=" + sizeList + ", totalPage=" + totalPage + "]";
+    }
     public PaginationDto(Integer pageList, Integer sizeList, Integer nextPageList, Integer totalPage,
             Pageable pageable) {
         super();
@@ -51,10 +56,5 @@ public class PaginationDto{
         this.nextPageList = nextPageList;
         this.totalPage = totalPage;
         this.pageable = pageable;
-    }
-    @Override
-    public String toString() {
-        return "PaginationDto [nextPageList=" + nextPageList + ", pageList=" + pageList + ", pageable=" + pageable
-                + ", sizeList=" + sizeList + ", totalPage=" + totalPage + "]";
     }
 }

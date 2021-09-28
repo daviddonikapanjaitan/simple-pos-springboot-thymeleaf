@@ -1,16 +1,23 @@
 package com.simple.pos.simplepointofsale.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.simple.pos.simplepointofsale.model.ShoppingBasket;
 import com.simple.pos.simplepointofsale.repository.ShoppingBasketRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.expression.Lists;
 
 @Service
 public class ShoppingBasketServiceImpl implements ShoppingBasketService{
+
+    private static Logger logger = LoggerFactory.getLogger(ShoppingBasketServiceImpl.class);
 
     @Autowired
     private ShoppingBasketRepository shoppingBasketRepository;
@@ -41,5 +48,20 @@ public class ShoppingBasketServiceImpl implements ShoppingBasketService{
     @Override
     public void deleteShoppingBasketById(Long id) {
         this.shoppingBasketRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ShoppingBasket> getAllShoppingBasketsAscDesc(Pageable pageable) {
+        List<ShoppingBasket> lShoppingBaskets = new ArrayList<>();
+        logger.info("{}", lShoppingBaskets.toString());
+
+        lShoppingBaskets = shoppingBasketRepository.findAll(pageable).getContent();
+
+        return lShoppingBaskets;
+    }
+
+    @Override
+    public int getSize() {
+        return shoppingBasketRepository.findAll().size();
     }
 }

@@ -1,16 +1,23 @@
 package com.simple.pos.simplepointofsale.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.simple.pos.simplepointofsale.Dto.InventoryLocationsDto;
+import com.simple.pos.simplepointofsale.Dto.PaginationDto;
+import com.simple.pos.simplepointofsale.Dto.PaginationRequestDto;
 import com.simple.pos.simplepointofsale.model.InventoryLocations;
 import com.simple.pos.simplepointofsale.service.AddressesService;
 import com.simple.pos.simplepointofsale.service.InventoryLocationsService;
 import com.simple.pos.simplepointofsale.service.ProductsService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
+import com.simple.pos.simplepointofsale.utils.PaginationService;
 import com.simple.pos.simplepointofsale.validationService.InventoryLocationsValidation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  
 @Controller
@@ -50,14 +58,61 @@ public class InventoryLocationsController {
     @Autowired
     AddressesService addressesService;
 
+    @Autowired
+    PaginationService paginationService;
+
     @GetMapping("/list")
-    public String viewInventoryLocationMethodPage(Model model){
+    public String viewInventoryLocationMethodPage(Model model, 
+        @RequestParam(defaultValue = "ascDesc") String ascDesc,
+        @RequestParam(defaultValue = "page") String page,
+        @RequestParam(defaultValue = "size") String size,
+        @RequestParam(defaultValue = "filtering") String filtering
+    ){
+        PaginationRequestDto paginationRequestDto = new PaginationRequestDto(
+            ascDesc,
+            page,
+            size,
+            filtering,
+            inventoryLocationsService.getSize(),
+            "inventoryLocationsId"
+        );
+        PaginationDto paginationDto = paginationService
+            .paginationService(paginationRequestDto);
+
+        Pageable pageable = paginationDto.getPageable();
+        Integer pageList = paginationDto.getPageList();
+        Integer nextPageList = paginationDto.getNextPageList();
+        Integer totalPage = paginationDto.getTotalPage();
+
+        List<InventoryLocations> lInventoryLocations = new ArrayList<>();
+        lInventoryLocations = inventoryLocationsService.getAllInventoryLocationAscDesc(pageable);
+        List<InventoryLocations> lInventoryLocationsFiltering = new ArrayList<>();
+
+        if(!filtering.equalsIgnoreCase("filtering")){
+            for(InventoryLocations inventoryLocations: lInventoryLocations){
+                if(inventoryLocations.getInventoryLocationsId() == Long.parseLong(filtering)){
+                    lInventoryLocationsFiltering.add(inventoryLocations);
+                }
+            }
+            lInventoryLocations = lInventoryLocationsFiltering;
+        }else{
+            filtering = "";
+        }
+
         addAttributeService.addFirstNameAttribute(model);
         model.addAttribute("updateFormLink", updateFormLink);
-        model.addAttribute("listInventoryLocations", inventoryLocationsService.getAllInventoryLocations());
+        model.addAttribute("listInventoryLocations", lInventoryLocations);
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("saveFormLink", saveFormLink);
         model.addAttribute("deleteFormLink", deleteFormLink);
+        model.addAttribute("refresh", listLink);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("ascDesc", ascDesc);
+        model.addAttribute("size", size);
+        model.addAttribute("page", page);
+        model.addAttribute("filtering", filtering);
+        model.addAttribute("pageList", pageList);
+        model.addAttribute("nextPageList", nextPageList);
 
         return "inventory_location_ui/index";
     }

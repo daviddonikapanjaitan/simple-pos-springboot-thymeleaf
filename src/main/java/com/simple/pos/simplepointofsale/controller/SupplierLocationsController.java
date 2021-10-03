@@ -1,7 +1,11 @@
 package com.simple.pos.simplepointofsale.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.simple.pos.simplepointofsale.Dto.PaginationDto;
+import com.simple.pos.simplepointofsale.Dto.PaginationRequestDto;
 import com.simple.pos.simplepointofsale.Dto.SupplierLocationDto;
 import com.simple.pos.simplepointofsale.model.SupplierLocation;
 import com.simple.pos.simplepointofsale.service.AddressesService;
@@ -9,11 +13,13 @@ import com.simple.pos.simplepointofsale.service.SupplierLocationService;
 import com.simple.pos.simplepointofsale.service.SuppliersService;
 import com.simple.pos.simplepointofsale.utils.AddAttributeService;
 import com.simple.pos.simplepointofsale.utils.ConverterService;
+import com.simple.pos.simplepointofsale.utils.PaginationService;
 import com.simple.pos.simplepointofsale.validationService.SupplierLocationValidationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  
 @Controller
@@ -56,15 +63,62 @@ public class SupplierLocationsController {
     @Autowired
     AddressesService addressesService;
 
+    @Autowired
+    PaginationService paginationService;
+
     @GetMapping("/list")
-    public String viewSupplierLocationsMethodPage(Model model){
+    public String viewSupplierLocationsMethodPage(Model model, 
+        @RequestParam(defaultValue = "ascDesc") String ascDesc,
+        @RequestParam(defaultValue = "page") String page,
+        @RequestParam(defaultValue = "size") String size,
+        @RequestParam(defaultValue = "filtering") String filtering
+    ){
+        PaginationRequestDto paginationRequestDto = new PaginationRequestDto(
+            ascDesc,
+            page,
+            size,
+            filtering,
+            supplierLocationService.getSize(),
+            "supplierLocationId"
+        );
+        PaginationDto paginationDto = paginationService
+            .paginationService(paginationRequestDto);
+
+        Pageable pageable = paginationDto.getPageable();
+        Integer pageList = paginationDto.getPageList();
+        Integer nextPageList = paginationDto.getNextPageList();
+        Integer totalPage = paginationDto.getTotalPage();
+
+        List<SupplierLocation> lSupplierLocations = new ArrayList<>();
+        lSupplierLocations = supplierLocationService.getAllSupplierLocationAscDesc(pageable);
+        List<SupplierLocation> lSupplierLocationsFiltering = new ArrayList<>();
+
+        if(!filtering.equalsIgnoreCase("filtering")){
+            for(SupplierLocation supplierLocation: lSupplierLocations){
+                if(supplierLocation.getSupplierLocationId() == Long.parseLong(filtering)){
+                    lSupplierLocationsFiltering.add(supplierLocation);
+                }
+            }
+            lSupplierLocations = lSupplierLocationsFiltering;
+        }else{
+            filtering = "";
+        }
+
         addAttributeService.addFirstNameAttribute(model);
         model.addAttribute("updateFormLink", updateFormLink);
-        model.addAttribute("listSupplierLocations", supplierLocationService.getAllSupplierLocations());
+        model.addAttribute("listSupplierLocations", lSupplierLocations);
         model.addAttribute("titleCRUD", titleCRUD);
         model.addAttribute("saveFormLink", saveFormLink);
         model.addAttribute("deleteFormLink", deleteFormLink);
-    
+        model.addAttribute("refresh", listLink);
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("ascDesc", ascDesc);
+        model.addAttribute("size", size);
+        model.addAttribute("page", page);
+        model.addAttribute("filtering", filtering);
+        model.addAttribute("pageList", pageList);
+        model.addAttribute("nextPageList", nextPageList);
+
         return "supplier_location_ui/index";
     }
 

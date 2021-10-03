@@ -20,7 +20,7 @@
                         <div class="form-group">
                             <label for="exampleInputPassword1">Product Id</label>
                             <select class="form-control" id="dropOperator" th:field="*{productId}">
-                                <option value="0">Select Payment Method</option>
+                                <option value="0">Select Product ID</option>
                                 <option th:each="listProduct : ${listProduct}" 
                                         th:value="${listProduct.productId}" 
                                         th:text="${listProduct.productTypeCode + ' - ' + listProduct.productName}"></option>
@@ -34,7 +34,7 @@
                         <div class="form-group">
                             <label for="exampleInputPassword1">Supplier Code</label>
                             <select class="form-control" id="dropOperator" th:field="*{supplierCode}">
-                                <option value="0">Select Payment Method</option>
+                                <option value="0">Select Supplier Code</option>
                                 <option th:each="listSuppliers : ${listSuppliers}" 
                                         th:value="${listSuppliers.supplierCode}" 
                                         th:text="${listSuppliers.supplierCode + ' - ' + listSuppliers.supplierName}"></option>

@@ -9,31 +9,75 @@
         <main role="main" class="container">
             <div class="container my-2">
                 <h1 th:text="${titleCRUD} + ' List'"></h1>
-                <a th:href="@{/{pathSave}(pathSave=${saveFormLink})}" th:text="'Add ' +  ${titleCRUD}" class="btn btn-primary btn-sm mb-3"></a>
-        
-                <table border="1" class="table table-striped table-responsive-md">
-                    <thead>
-                        <tr>
-                            <th>Suppliers ID</th>
-                            <th>Suppliers Name</th>
-                            <th>Supplier Code</th>
-                            <th> Actions </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="supplier : ${listSupplier}">
-                            <td th:text="${supplier.suppliersId}"></td>
-                            <td th:text="${supplier.supplierName}"></td>
-                            <td th:text="${supplier.supplierCode}"></td>
-                            <td> <a th:href="@{'/' + ${updateFormLink} + '/' + ${supplier.suppliersId}}" class="btn btn-primary">Update</a>
-                                <a th:href="@{'/' + ${deleteFormLink} + '/' + ${supplier.suppliersId}}" class="btn btn-danger">Delete</a>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(listSupplier)}">
-                            <td class="text-center" colspan="5">Data is Empty</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="row">
+                    <div class="col-3">
+                        <a th:href="@{/{pathSave}(pathSave=${saveFormLink})}" th:text="'Add ' +  ${titleCRUD}" class="btn btn-primary btn-sm mb-3"></a>
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col-3 ml-auto dropdown">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Sorting & Pagination
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" th:href="@{/{pathRefresh}(pathRefresh=${refresh})}">Refresh</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=asc' + '&size=' + ${size} + '&page=' + ${page}}">Sorting Product ASC</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=desc' + '&size=' + ${size} + '&page=' + ${page}}">Sorting Product DESC</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=' + ${ascDesc} +  '&size=3' + '&page=' + ''}">Pagination - 3</a>
+                            <a class="dropdown-item" th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=' + ${ascDesc} + '&size=5' + '&page=' + ''}">Pagination - 5</a>
+                        </div>
+                    </div>
+                    <div class="col-3 ml-auto">
+                        <form class="d-flex" action="#" th:action="@{/{pathRefresh}(pathRefresh=${refresh})}" method="GET">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" th:name="filtering" th:value="${filtering}">
+                            &nbsp;
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <table border="1" class="table table-striped table-responsive-md">
+                        <thead>
+                            <tr>
+                                <th>Suppliers ID</th>
+                                <th>Suppliers Name</th>
+                                <th>Supplier Code</th>
+                                <th> Actions </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="supplier : ${listSupplier}">
+                                <td th:text="${supplier.suppliersId}"></td>
+                                <td th:text="${supplier.supplierName}"></td>
+                                <td th:text="${supplier.supplierCode}"></td>
+                                <td> <a th:href="@{'/' + ${updateFormLink} + '/' + ${supplier.suppliersId}}" class="btn btn-primary">Update</a>
+                                    <a th:href="@{'/' + ${deleteFormLink} + '/' + ${supplier.suppliersId}}" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(listSupplier)}">
+                                <td class="text-center" colspan="5">Data is Empty</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <nav aria-label="Page navigation example" th:if="${not #lists.isEmpty(listSupplier)}">
+                        <ul class="pagination">
+                            <li class="page-item" th:if="(${pageList} != 0)"><a class="page-link" 
+                                th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=asc' + '&size=' + ${size} + '&page=' + ${pageList}}"
+                            >Previous</a></li>
+                            <span th:each="star:${#numbers.sequence(1, totalPage)}">
+                                <li class="page-item"><a class="page-link" href="#" 
+                                    th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=asc' + '&size=' + ${size} + '&page=' + ${star}}"
+                                    th:text="${star}"></a></li>
+                            </span> 
+                            <li class="page-item" th:if="((${pageList} + 1) != ${totalPage})">
+                                <a class="page-link" 
+                                    th:href="@{${#httpServletRequest.requestURI} + '?ascDesc=asc' + '&size=' + ${size} + '&page=' + ${nextPageList}}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </main>
     </body>

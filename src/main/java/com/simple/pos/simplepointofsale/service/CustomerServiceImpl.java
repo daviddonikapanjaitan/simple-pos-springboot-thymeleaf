@@ -1,16 +1,22 @@
 package com.simple.pos.simplepointofsale.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.simple.pos.simplepointofsale.model.Customer;
 import com.simple.pos.simplepointofsale.repository.CustomerRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CustomerServiceImpl implements CustomerService{
+
+    private static Logger logger = LoggerFactory.getLogger(ProductTypesServiceImpl.class);
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -41,5 +47,20 @@ public class CustomerServiceImpl implements CustomerService{
     @Override
     public void deleteCustomerById(Long id) {
         this.customerRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Customer> getAllCustomersAscDesc(Pageable pageable) {
+        List<Customer> lCustomers = new ArrayList<>();
+        logger.info("{}", lCustomers.toString());
+
+        lCustomers = customerRepository.findAll(pageable).getContent();
+
+        return lCustomers;
+    }
+
+    @Override
+    public int getSize() {
+        return customerRepository.findAll().size();
     }
 }

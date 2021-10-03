@@ -87,20 +87,22 @@ public class ProductSuppliersValidationServiceImpl implements ProductSuppliersVa
         }else if(
             !validationUtilsService.phoneValidation(productSuppliersDto.getPercentageDiscount())
         ){
-            redirectAttributes.addFlashAttribute("message", "Invalid Standard Price");
+            redirectAttributes.addFlashAttribute("message", "Invalid Percentage Discount");
         }else if(
             !validationUtilsService.phoneValidation(productSuppliersDto.getMinimumOrderQuantity())
         ){
-            redirectAttributes.addFlashAttribute("message", "Invalid Standard Price");
+            redirectAttributes.addFlashAttribute("message", "Invalid Minimum Order Quantity");
         }else if(
             !validationUtilsService.phoneValidation(productSuppliersDto.getMaximumOrderQuantity())
         ){
-            redirectAttributes.addFlashAttribute("message", "Invalid Standard Price");
-        }else if(
-            !validationUtilsService.phoneValidation(productSuppliersDto.getOtherItemSuppliersDetails())
-        ){
-            redirectAttributes.addFlashAttribute("message", "Invalid Standard Price");
-        }else if(
+            redirectAttributes.addFlashAttribute("message", "Invalid Maximum Order Quantity");
+        }
+        // else if(
+        //     !validationUtilsService.phoneValidation(productSuppliersDto.getOtherItemSuppliersDetails())
+        // ){
+        //     redirectAttributes.addFlashAttribute("message", "Invalid Other Item Suppliers Details");
+        // }
+        else if(
             productSuppliersDto.getDeliveryLeadTime().length() < 5
         ){
             redirectAttributes.addFlashAttribute("message", "Field delivery lead time length must larger than 5");
@@ -113,15 +115,17 @@ public class ProductSuppliersValidationServiceImpl implements ProductSuppliersVa
             Long.parseLong(productSuppliersDto.getPercentageDiscount()) > 100
         ){
             redirectAttributes.addFlashAttribute("message", "Field percentage discount range 0-100%");
-        }else if(
-            productSuppliersDto.getMinimumOrderQuantity().length() < 5
-        ){
-            redirectAttributes.addFlashAttribute("message", "Field minimum order quantity length must larger than 5");
-        }else if(
-            productSuppliersDto.getMaximumOrderQuantity().length() < 5
-        ){
-            redirectAttributes.addFlashAttribute("message", "Field maximum order quantity length must larger than 5");
-        }else if(
+        }
+        // else if(
+        //     productSuppliersDto.getMinimumOrderQuantity().length() < 5
+        // ){
+        //     redirectAttributes.addFlashAttribute("message", "Field minimum order quantity length must larger than 5");
+        // }else if(
+        //     productSuppliersDto.getMaximumOrderQuantity().length() < 5
+        // ){
+        //     redirectAttributes.addFlashAttribute("message", "Field maximum order quantity length must larger than 5");
+        // }
+        else if(
             productSuppliersDto.getOtherItemSuppliersDetails().length() < 5
         ){
             redirectAttributes.addFlashAttribute("message", "Field other item suppliers details length must larger than 5");

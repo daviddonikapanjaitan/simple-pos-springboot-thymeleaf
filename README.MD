@@ -23,3 +23,35 @@ Feature:
 Feature Session:
 - User Roles
 - Templating base roles
+
+Image: 
+
+-   ERD Design Database:
+
+![ERD Design Database](image_readme_md/point_of_sale_erd.gif)
+
+-   Customer List CRUD: 
+
+![Customer List CRUD](image_readme_md/customer_list.png)
+
+-   Login: 
+
+![Login](image_readme_md/login.png)
+
+-   Products: 
+
+![Products](image_readme_md/products.png)
+
+-   Registration: 
+
+![Registration](image_readme_md/registration.png)
+
+-   Supplier: 
+
+![Supplier](image_readme_md/supplier.png)
+
+<style type="text/css">
+    img {
+        width: 1200px;
+    }
+</style>

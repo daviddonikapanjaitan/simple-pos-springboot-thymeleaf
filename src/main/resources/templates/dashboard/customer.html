@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <div th:replace="head_fragments/head_customers :: head"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <body>
+        <div th:replace="fragments/header :: header(first_name=${first_name})"></div>
+
+        <main role="main" class="container">
+            <div class="container my-2">
+                <h1>Customer Dashboard</h1>
+                <div class="row">
+                    <div class="col-3 col-12 col-lg-3">
+                        <div class="card text-white bg-primary mb-3 col-2" style="max-width: 18rem;">
+                            <div class="card-header">Customer</div>
+                            <div class="card-body">
+                              <h5 class="card-title">Total Customer</h5>
+                              <p class="card-text">Customer Active: 6</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-12 col-lg-3">
+                        <div class="card text-white bg-secondary mb-3 col-2" style="max-width: 18rem;">
+                            <div class="card-header">Suppliers</div>
+                            <div class="card-body">
+                              <h5 class="card-title">Total Suppliers</h5>
+                              <p class="card-text">Suppliers Active: 5</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-12 col-lg-3">
+                        <div class="card text-white bg-danger mb-3 col-2" style="max-width: 18rem;">
+                            <div class="card-header">Sales</div>
+                            <div class="card-body">
+                              <h5 class="card-title">Total Sale</h5>
+                              <p class="card-text">Total Sale: 1000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 col-12 col-lg-3">
+                        <div class="card text-white bg-success mb-3 col-2" style="max-width: 18rem;">
+                            <div class="card-header">Transaction</div>
+                            <div class="card-body">
+                              <h5 class="card-title">Total Transaction</h5>
+                              <p class="card-text">Rp. 100.000,-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </main>
+        <script>
+            const labels = [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+            ];
+            const data = {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Transaction',
+                    backgroundColor: 'rgb(45,101,255,0.4)',
+                    borderColor: 'rgb(45,101,255,0.4)',
+                    data: [0, 10, 5, 2, 20, 30, 45],
+                }]
+            };
+
+            const config = {
+                type: 'line',
+                data: data,
+                options: {}
+            };
+
+            var myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+        </script>
+    </body>
+</html>

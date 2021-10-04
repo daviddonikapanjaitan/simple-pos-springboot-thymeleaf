@@ -26,6 +26,10 @@ Feature Session:
 
 Image: 
 
+-   Customer Dashboard
+
+![Customer Dashboard](image_readme_md/customer_dashboard.png)
+
 -   ERD Design Database:
 
 ![ERD Design Database](image_readme_md/point_of_sale_erd.gif)
